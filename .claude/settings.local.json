@@ -3,7 +3,12 @@
     "allow": [
       "Bash(powershell -Command \"Compress-Archive -Path ''../package.json'' -DestinationPath ''SocialNetworkArmy-v1.1.1.zip'' -Force\")",
       "Bash(dir \"C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\socialnetworkarmy-website\\\\releases\")",
-      "Bash(powershell -Command \"Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.1.0.zip''; Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.0.0.zip''; Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.2.0-beta.zip''\")"
+      "Bash(powershell -Command \"Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.1.0.zip''; Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.0.0.zip''; Copy-Item ''SocialNetworkArmy-v1.1.1.zip'' ''SocialNetworkArmy-v1.2.0-beta.zip''\")",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)"
     ]
   }
 }

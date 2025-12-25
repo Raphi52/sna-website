@@ -5,7 +5,7 @@ const NOWPAYMENTS_API_URL = "https://api.nowpayments.io/v1";
 export interface CreatePaymentParams {
   priceAmount: number;
   priceCurrency: string;
-  payCurrency: "btc" | "eth" | "usdttrc20";
+  payCurrency: "btc" | "eth" | "usdterc20";
   orderId: string;
   orderDescription: string;
 }
@@ -169,7 +169,7 @@ export async function getEstimatedAmount(
 export const CRYPTO_CURRENCIES = {
   btc: { name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
   eth: { name: "Ethereum", symbol: "ETH", color: "#627EEA" },
-  usdttrc20: { name: "USDT (TRC20)", symbol: "USDT", color: "#26A17B" },
+  usdterc20: { name: "USDT (ERC20)", symbol: "USDT", color: "#26A17B" },
 } as const;
 
 export type CryptoCurrency = keyof typeof CRYPTO_CURRENCIES;

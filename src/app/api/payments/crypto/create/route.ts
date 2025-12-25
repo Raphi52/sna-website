@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate currency
-    if (!["btc", "eth", "usdttrc20"].includes(currency)) {
+    if (!["btc", "eth", "usdterc20"].includes(currency)) {
       return NextResponse.json(
         { error: "Invalid cryptocurrency" },
         { status: 400 }

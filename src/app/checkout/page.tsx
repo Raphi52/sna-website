@@ -191,7 +191,7 @@ function CheckoutContent() {
   const { data: session, status } = useSession();
 
   const [selectedPayment, setSelectedPayment] = useState("card");
-  const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | "usdttrc20" | null>(null);
+  const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | "usdterc20" | null>(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [cryptoPayment, setCryptoPayment] = useState<{
@@ -493,11 +493,11 @@ function CheckoutContent() {
                   {[
                     { id: "btc", name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
                     { id: "eth", name: "Ethereum", symbol: "ETH", color: "#627EEA" },
-                    { id: "usdttrc20", name: "USDT (TRC20)", symbol: "USDT", color: "#26A17B" },
+                    { id: "usdterc20", name: "USDT (ERC20)", symbol: "USDT", color: "#26A17B" },
                   ].map((crypto) => (
                     <button
                       key={crypto.id}
-                      onClick={() => setSelectedCrypto(crypto.id as "btc" | "eth" | "usdttrc20")}
+                      onClick={() => setSelectedCrypto(crypto.id as "btc" | "eth" | "usdterc20")}
                       className={`p-4 rounded-lg border transition-colors text-center ${
                         selectedCrypto === crypto.id
                           ? "border-info bg-info/10"
