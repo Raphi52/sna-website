@@ -38,7 +38,8 @@ const plans = [
       { text: "All future updates", included: true },
     ],
     cta: "Get Pro",
-    href: "/auth/register?plan=pro",
+    hrefMonthly: "/checkout?product=pro_monthly",
+    hrefAnnual: "/checkout?product=pro_annual",
     popular: true,
   },
   {
@@ -54,7 +55,7 @@ const plans = [
       { text: "No recurring fees", included: true },
     ],
     cta: "Get Lifetime",
-    href: "/auth/register?plan=lifetime",
+    href: "/checkout?product=lifetime",
     popular: false,
     isLifetime: true,
   },
@@ -195,7 +196,11 @@ export function Pricing() {
               </ul>
 
               {/* CTA */}
-              <Link href={plan.href}>
+              <Link href={
+                "hrefMonthly" in plan
+                  ? (isAnnual ? plan.hrefAnnual : plan.hrefMonthly)
+                  : plan.href
+              }>
                 <Button
                   variant={plan.popular ? "pro" : "outline"}
                   size="lg"

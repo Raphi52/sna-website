@@ -281,7 +281,7 @@ export function Proxies() {
                 <div className="text-center mb-6">
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-4xl font-bold text-white">
-                      ${pkg.price}
+                      {pkg.price}€
                     </span>
                     <span className="text-muted">/{pkg.period}</span>
                   </div>
@@ -314,7 +314,7 @@ export function Proxies() {
                   ))}
                 </ul>
 
-                <Link href="/auth/register?redirect=/dashboard/proxies">
+                <Link href={`/checkout?product=proxy_${pkg.id}`}>
                   <Button
                     variant={pkg.popular ? "pro" : "default"}
                     className="w-full"
