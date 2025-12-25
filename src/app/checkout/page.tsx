@@ -136,19 +136,15 @@ const paymentMethods = [
     name: "Credit Card",
     icon: (
       <div className="flex gap-2">
-        <svg className="w-10 h-6" viewBox="0 0 48 32" fill="none">
-          <rect width="48" height="32" rx="4" fill="#1A1F71"/>
-          <path d="M18.5 21L21.5 11H24L21 21H18.5Z" fill="white"/>
-          <path d="M30.5 11.2C30 11 29.2 10.8 28.2 10.8C25.3 10.8 23.3 12.3 23.3 14.4C23.3 16 24.7 16.9 25.8 17.4C26.9 17.9 27.3 18.3 27.3 18.8C27.3 19.6 26.3 19.9 25.5 19.9C24.3 19.9 23.7 19.7 22.7 19.3L22.3 19.1L21.9 21.6C22.6 21.9 23.9 22.2 25.2 22.2C28.3 22.2 30.3 20.7 30.3 18.5C30.3 17.2 29.5 16.2 27.8 15.4C26.8 14.9 26.2 14.5 26.2 14C26.2 13.5 26.7 13 27.8 13C28.7 13 29.4 13.2 29.9 13.4L30.2 13.5L30.5 11.2Z" fill="white"/>
-          <path d="M35.5 11H33.3C32.6 11 32.1 11.2 31.8 12L27.5 21H30.6L31.2 19.3H35L35.4 21H38.1L35.5 11ZM32 17C32.2 16.4 33.2 13.8 33.2 13.8C33.2 13.8 33.5 13 33.6 12.5L33.9 13.6C33.9 13.6 34.5 16.2 34.6 17H32Z" fill="white"/>
-          <path d="M16.3 11L13.4 18L13.1 16.5C12.5 14.7 10.8 12.8 9 11.9L11.6 21H14.8L19.5 11H16.3Z" fill="white"/>
-          <path d="M11.2 11H6.5L6.5 11.2C10.2 12.2 12.6 14.5 13.1 16.5L12.4 12C12.3 11.2 11.9 11 11.2 11Z" fill="#F9A533"/>
+        <svg className="w-10 h-6" viewBox="0 0 50 32" fill="none">
+          <rect width="50" height="32" rx="4" fill="#1A1F71"/>
+          <text x="25" y="20" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontStyle="italic" fontFamily="Arial">VISA</text>
         </svg>
-        <svg className="w-10 h-6" viewBox="0 0 48 32" fill="none">
-          <rect width="48" height="32" rx="4" fill="#000"/>
-          <circle cx="18" cy="16" r="10" fill="#EB001B"/>
-          <circle cx="30" cy="16" r="10" fill="#F79E1B"/>
-          <path d="M24 8C26.5 10 28 12.8 28 16C28 19.2 26.5 22 24 24C21.5 22 20 19.2 20 16C20 12.8 21.5 10 24 8Z" fill="#FF5F00"/>
+        <svg className="w-10 h-6" viewBox="0 0 50 32" fill="none">
+          <rect width="50" height="32" rx="4" fill="#000"/>
+          <circle cx="19" cy="16" r="10" fill="#EB001B"/>
+          <circle cx="31" cy="16" r="10" fill="#F79E1B"/>
+          <path d="M25 8C27.5 10 29 12.8 29 16C29 19.2 27.5 22 25 24C22.5 22 21 19.2 21 16C21 12.8 22.5 10 25 8Z" fill="#FF5F00"/>
         </svg>
       </div>
     ),
