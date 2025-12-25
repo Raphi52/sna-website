@@ -216,7 +216,8 @@ function CheckoutContent() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push(`/auth/login?callbackUrl=/checkout?product=${productId}`);
+      const callbackUrl = encodeURIComponent(`/checkout?product=${productId}`);
+      router.push(`/auth/login?callbackUrl=${callbackUrl}`);
     }
   }, [status, router, productId]);
 

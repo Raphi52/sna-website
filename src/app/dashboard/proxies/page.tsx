@@ -347,11 +347,15 @@ export default function ProxiesPage() {
                 Need more proxies or data? Upgrade your package or renew early.
               </p>
               <div className="flex gap-3">
-                <Button variant="outline">Renew Current Package</Button>
-                <Button variant="pro">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Upgrade Package
-                </Button>
+                <Link href={`/checkout?product=proxy_${activeOrder.packageSlug}`}>
+                  <Button variant="outline">Renew Current Package</Button>
+                </Link>
+                <Link href="/#proxies">
+                  <Button variant="pro">
+                    <Zap className="w-4 h-4 mr-2" />
+                    Upgrade Package
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

@@ -11,6 +11,7 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
+  const redirect = searchParams.get("redirect");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -62,8 +63,10 @@ function RegisterForm() {
       if (result?.error) {
         setError("Account created but sign in failed. Please try logging in.");
       } else {
-        // Redirect based on plan
-        if (plan) {
+        // Redirect based on redirect param, plan, or default
+        if (redirect) {
+          router.push(redirect);
+        } else if (plan) {
           router.push(`/dashboard/license?upgrade=${plan}`);
         } else {
           router.push("/dashboard");
