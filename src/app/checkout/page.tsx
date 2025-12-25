@@ -18,7 +18,6 @@ import {
   Zap,
   Copy,
   QrCode,
-  ExternalLink,
 } from "lucide-react";
 
 // Products configuration
@@ -254,29 +253,6 @@ function CheckoutContent() {
       console.error("Payment error:", error);
       alert("Payment failed. Please try again.");
     } finally {
-      setProcessing(false);
-    }
-  };
-
-  // Redirect to NOWPayments hosted page
-  const handleCryptoRedirect = async () => {
-    setProcessing(true);
-    try {
-      const response = await fetch("/api/payments/crypto/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create payment");
-      }
-
-      const data = await response.json();
-      window.location.href = data.invoiceUrl;
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Payment failed. Please try again.");
       setProcessing(false);
     }
   };
@@ -544,16 +520,6 @@ function CheckoutContent() {
                       <p className="text-xs text-muted">{crypto.name}</p>
                     </button>
                   ))}
-                </div>
-                <div className="border-t border-border pt-4">
-                  <button
-                    onClick={handleCryptoRedirect}
-                    disabled={processing}
-                    className="w-full text-sm text-info hover:underline flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Or pay via NOWPayments page
-                  </button>
                 </div>
               </Card>
             )}
