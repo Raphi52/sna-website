@@ -133,8 +133,8 @@ const features = [
     highlights: [
       {
         icon: Maximize2,
-        title: "1% Edge Crop",
-        description: "Subtle crop removes 1% from edges - undetectable change",
+        title: "0-2% Edge Crop",
+        description: "Subtle crop removes 0-2% from edges - undetectable change",
       },
       {
         icon: Type,
@@ -488,7 +488,7 @@ function MediaVisual() {
             {/* Crop indicator badge */}
             <div className="absolute top-2 right-2 bg-black/70 rounded px-1.5 py-0.5 flex items-center gap-1">
               <Maximize2 className="w-3 h-3 text-white" />
-              <span className="text-[8px] text-white font-medium">-1%</span>
+              <span className="text-[8px] text-white font-medium">0-2%</span>
             </div>
 
             {/* Subtitles in the middle */}
@@ -529,7 +529,7 @@ function MediaVisual() {
       <div className="grid grid-cols-4 gap-2 pt-2">
         <div className="text-center p-2 bg-surface-hover rounded-lg">
           <Maximize2 className="w-4 h-4 text-info mx-auto mb-1" />
-          <div className="text-[9px] text-muted">1% Crop</div>
+          <div className="text-[9px] text-muted">0-2% Crop</div>
         </div>
         <div className="text-center p-2 bg-surface-hover rounded-lg">
           <Type className="w-4 h-4 text-warning mx-auto mb-1" />
