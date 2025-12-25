@@ -406,14 +406,14 @@ function BotVisual() {
     { name: "Watch Stories", gradient: "gradient-instagram" },
     { name: "Publish", gradient: "gradient-instagram" },
     { name: "Messages", gradient: "gradient-instagram" },
-    { name: "Profile Pic", gradient: "gradient-instagram" },
-    { name: "Bio", gradient: "gradient-instagram" },
+    { name: "Ban Opponent", gradient: "gradient-instagram" },
+    { name: "Extract Following", gradient: "gradient-instagram" },
   ];
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-white">mmi.acosta</span>
+        <span className="text-sm font-medium text-white">Instagram Bot</span>
         <div className="w-6 h-6 gradient-instagram rounded" />
       </div>
       {/* Action buttons grid */}
