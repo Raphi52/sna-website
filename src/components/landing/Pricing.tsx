@@ -18,7 +18,7 @@ const plans = [
       { text: "Community support", included: true },
       { text: "Advanced fingerprinting", included: false },
       { text: "Unlimited accounts", included: false },
-      { text: "Priority support", included: false },
+      { text: "Proxies included", included: false },
     ],
     cta: "Download Free",
     href: "/download",
@@ -26,14 +26,14 @@ const plans = [
   },
   {
     name: "Pro",
-    price: { monthly: 29, annual: 290 },
+    price: { monthly: 29, annual: 278 },
     description: "For serious automation",
     features: [
       { text: "Unlimited accounts", included: true },
       { text: "Advanced automation", included: true },
       { text: "24/7 scheduler", included: true },
       { text: "Advanced fingerprinting", included: true },
-      { text: "Proxy support", included: true },
+      { text: "1 proxy included/month", included: true, highlight: true },
       { text: "Priority support", included: true },
       { text: "All future updates", included: true },
     ],
@@ -43,15 +43,14 @@ const plans = [
   },
   {
     name: "Lifetime",
-    price: { monthly: 199, annual: 199 },
+    price: { monthly: 299, annual: 299 },
     description: "One-time payment, forever",
     features: [
       { text: "Everything in Pro", included: true },
+      { text: "10 proxies included/month", included: true, highlight: true },
       { text: "Lifetime updates", included: true },
-      { text: "Custom integrations", included: true },
       { text: "1-on-1 onboarding", included: true },
       { text: "Priority feature requests", included: true },
-      { text: "White-label option", included: true },
       { text: "No recurring fees", included: true },
     ],
     cta: "Get Lifetime",
@@ -152,12 +151,11 @@ export function Pricing() {
                 <p className="text-sm text-muted mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center">
                   <span className="text-4xl font-bold text-white">
-                    $
                     {plan.isLifetime
                       ? plan.price.monthly
                       : isAnnual
                       ? Math.round(plan.price.annual / 12)
-                      : plan.price.monthly}
+                      : plan.price.monthly}€
                   </span>
                   {!plan.isLifetime && plan.price.monthly > 0 && (
                     <span className="text-muted ml-2">/month</span>
@@ -168,26 +166,26 @@ export function Pricing() {
                 </div>
                 {isAnnual && !plan.isLifetime && plan.price.annual > 0 && (
                   <p className="text-xs text-muted mt-1">
-                    Billed ${plan.price.annual}/year
+                    Billed {plan.price.annual}€/year
                   </p>
                 )}
               </div>
 
               {/* Features */}
               <ul className="space-y-3 mb-8">
-                {plan.features.map((feature) => (
+                {plan.features.map((feature: { text: string; included: boolean; highlight?: boolean }) => (
                   <li
                     key={feature.text}
-                    className="flex items-center text-sm"
+                    className={`flex items-center text-sm ${feature.highlight ? "bg-info/10 -mx-2 px-2 py-1 rounded-lg" : ""}`}
                   >
                     {feature.included ? (
-                      <Check className="w-4 h-4 text-success mr-2 flex-shrink-0" />
+                      <Check className={`w-4 h-4 ${feature.highlight ? "text-info" : "text-success"} mr-2 flex-shrink-0`} />
                     ) : (
                       <X className="w-4 h-4 text-muted mr-2 flex-shrink-0" />
                     )}
                     <span
                       className={
-                        feature.included ? "text-white" : "text-muted"
+                        feature.highlight ? "text-info font-medium" : feature.included ? "text-white" : "text-muted"
                       }
                     >
                       {feature.text}
