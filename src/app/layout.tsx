@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} antialiased min-h-screen`}>
+    <html lang="en" className="dark overflow-x-hidden">
+      <body className={`${inter.variable} antialiased min-h-screen overflow-x-hidden`}>
         {children}
       </body>
     </html>
