@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -17,8 +17,21 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { data: session } = useSession();
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     // Only handle anchor links
@@ -78,14 +91,39 @@ export function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
-              <Link href="/dashboard" className="group flex items-center gap-2">
-                <span className="text-sm text-muted group-hover:text-white transition-colors opacity-0 group-hover:opacity-100 max-w-0 group-hover:max-w-[150px] overflow-hidden whitespace-nowrap transition-all duration-200">
-                  {session.user?.name}
-                </span>
-                <button className="w-10 h-10 rounded-full bg-surface-hover border border-border group-hover:border-info flex items-center justify-center transition-colors">
-                  <User className="w-5 h-5 text-white" />
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="group flex items-center gap-2"
+                >
+                  <span className="text-sm text-muted group-hover:text-white transition-colors">
+                    {session.user?.name}
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-surface-hover border border-border group-hover:border-info flex items-center justify-center transition-colors">
+                    <User className="w-5 h-5 text-white" />
+                  </div>
                 </button>
-              </Link>
+                {/* Dropdown Menu */}
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-surface border border-border rounded-lg shadow-lg py-1 z-50">
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-muted hover:text-white hover:bg-surface-hover transition-colors"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-muted hover:text-white hover:bg-surface-hover transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <Link href="/auth/login">
@@ -128,12 +166,21 @@ export function Navbar() {
             ))}
             <div className="pt-4 border-t border-border space-y-2">
               {session ? (
-                <Link href="/dashboard" className="block" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" size="sm" className="w-full">
-                    <User className="w-4 h-4 mr-2" />
-                    My Account
-                  </Button>
-                </Link>
+                <>
+                  <Link href="/dashboard" className="block" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" size="sm" className="w-full">
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 text-sm text-muted hover:text-white transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </>
               ) : (
                 <>
                   <Link href="/auth/login" className="block" onClick={() => setIsOpen(false)}>
