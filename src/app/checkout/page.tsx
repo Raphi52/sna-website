@@ -18,6 +18,7 @@ import {
   Zap,
   Copy,
   QrCode,
+  RefreshCw,
 } from "lucide-react";
 
 // Products configuration
@@ -176,10 +177,6 @@ const paymentMethods = [
           <path d="M16 4L9 16.5 16 21l7-4.5L16 4z" fill="white" fillOpacity="0.6"/>
           <path d="M9 17.5L16 28l7-10.5L16 22l-7-4.5z" fill="white"/>
         </svg>
-        <svg className="w-6 h-6" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-          <path d="M17.5 17.2v3.3h-3v-3.3c-2.7-.3-4.5-1.5-4.5-1.5l1-2.5s2 1.3 4.5 1.3c1.5 0 2.5-.5 2.5-1.5 0-1-.8-1.5-3-2-3-.7-5-2-5-4.5 0-2.3 1.8-4 4.5-4.3V5h3v2.2c2.2.3 3.5 1.2 3.5 1.2l-.8 2.5s-1.5-1-3.5-1c-1.5 0-2.2.5-2.2 1.3 0 .8.8 1.3 3 1.8 3.2.8 5 2.2 5 4.7 0 2.3-1.8 4-4.5 4.5z" fill="white"/>
-        </svg>
       </div>
     ),
     description: "Bitcoin, Ethereum",
@@ -201,6 +198,8 @@ function CheckoutContent() {
     payCurrency: string;
     qrCodeUrl: string;
   } | null>(null);
+  const [usdValue, setUsdValue] = useState<number | null>(null);
+  const [refreshingUsd, setRefreshingUsd] = useState(false);
   const [cardDetails, setCardDetails] = useState({
     number: "",
     expiry: "",
@@ -256,6 +255,34 @@ function CheckoutContent() {
       setProcessing(false);
     }
   };
+
+  // Fetch USD value for crypto amount
+  const fetchUsdValue = async () => {
+    if (!cryptoPayment) return;
+    setRefreshingUsd(true);
+    try {
+      const symbol = cryptoPayment.payCurrency.toLowerCase();
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${symbol === "btc" ? "bitcoin" : "ethereum"}&vs_currencies=usd`
+      );
+      const data = await response.json();
+      const price = symbol === "btc" ? data.bitcoin?.usd : data.ethereum?.usd;
+      if (price) {
+        setUsdValue(cryptoPayment.payAmount * price);
+      }
+    } catch (error) {
+      console.error("Failed to fetch USD value:", error);
+    } finally {
+      setRefreshingUsd(false);
+    }
+  };
+
+  // Fetch USD value when crypto payment is created
+  useEffect(() => {
+    if (cryptoPayment) {
+      fetchUsdValue();
+    }
+  }, [cryptoPayment]);
 
   // Format card number with spaces
   const formatCardNumber = (value: string) => {
@@ -527,10 +554,23 @@ function CheckoutContent() {
             {/* Crypto QR Code Payment */}
             {selectedPayment === "crypto" && cryptoPayment && (
               <Card className="p-6">
-                <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <QrCode className="w-5 h-5" />
-                  Scan to Pay
-                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <QrCode className="w-5 h-5" />
+                    Scan to Pay
+                  </h2>
+                  <button
+                    onClick={() => {
+                      setCryptoPayment(null);
+                      setSelectedCrypto(null);
+                      setUsdValue(null);
+                    }}
+                    className="text-sm text-muted hover:text-white flex items-center gap-1 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Change
+                  </button>
+                </div>
                 <div className="flex flex-col items-center">
                   {/* QR Code */}
                   <div className="bg-white p-3 rounded-lg mb-4">
@@ -547,6 +587,20 @@ function CheckoutContent() {
                     <p className="text-2xl font-bold text-white">
                       {cryptoPayment.payAmount} {cryptoPayment.payCurrency.toUpperCase()}
                     </p>
+                    {/* USD Converter */}
+                    <div className="flex items-center justify-center gap-2 mt-2">
+                      <span className="text-sm text-muted">
+                        ≈ ${usdValue ? usdValue.toFixed(2) : "..."} USD
+                      </span>
+                      <button
+                        onClick={fetchUsdValue}
+                        disabled={refreshingUsd}
+                        className="p-1 hover:bg-surface-hover rounded transition-colors"
+                        title="Refresh USD value"
+                      >
+                        <RefreshCw className={`w-3 h-3 text-muted ${refreshingUsd ? "animate-spin" : ""}`} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Address */}
