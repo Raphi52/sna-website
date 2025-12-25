@@ -5,7 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui";
-import { Menu, X, LayoutDashboard } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -79,10 +79,9 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
               <Link href="/dashboard">
-                <Button variant="pro" size="sm">
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
-                  Dashboard
-                </Button>
+                <button className="w-10 h-10 rounded-full bg-surface-hover border border-border hover:border-info flex items-center justify-center transition-colors">
+                  <User className="w-5 h-5 text-white" />
+                </button>
               </Link>
             ) : (
               <>
@@ -127,9 +126,9 @@ export function Navbar() {
             <div className="pt-4 border-t border-border space-y-2">
               {session ? (
                 <Link href="/dashboard" className="block" onClick={() => setIsOpen(false)}>
-                  <Button variant="pro" size="sm" className="w-full">
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
+                  <Button variant="outline" size="sm" className="w-full">
+                    <User className="w-4 h-4 mr-2" />
+                    My Account
                   </Button>
                 </Link>
               ) : (
