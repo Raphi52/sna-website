@@ -78,8 +78,11 @@ export function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
-              <Link href="/dashboard">
-                <button className="w-10 h-10 rounded-full bg-surface-hover border border-border hover:border-info flex items-center justify-center transition-colors">
+              <Link href="/dashboard" className="group flex items-center gap-2">
+                <span className="text-sm text-muted group-hover:text-white transition-colors opacity-0 group-hover:opacity-100 max-w-0 group-hover:max-w-[150px] overflow-hidden whitespace-nowrap transition-all duration-200">
+                  {session.user?.name}
+                </span>
+                <button className="w-10 h-10 rounded-full bg-surface-hover border border-border group-hover:border-info flex items-center justify-center transition-colors">
                   <User className="w-5 h-5 text-white" />
                 </button>
               </Link>
