@@ -41,8 +41,66 @@ export interface IPNPayload {
   outcome_currency: string;
 }
 
+export interface InvoiceResponse {
+  id: string;
+  token_id: string;
+  order_id: string;
+  order_description: string;
+  price_amount: number;
+  price_currency: string;
+  invoice_url: string;
+  created_at: string;
+  updated_at: string;
+}
+
 /**
- * Create a new crypto payment
+ * Create a crypto invoice with hosted payment page
+ */
+export async function createCryptoInvoice(params: {
+  priceAmount: number;
+  priceCurrency: string;
+  orderId: string;
+  orderDescription: string;
+  successUrl?: string;
+  cancelUrl?: string;
+}): Promise<InvoiceResponse> {
+  const apiKey = process.env.NOWPAYMENTS_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("NOWPAYMENTS_API_KEY is not configured");
+  }
+
+  const ipnCallbackUrl = `${process.env.NEXTAUTH_URL}/api/payments/crypto/webhook`;
+  const successUrl = params.successUrl || `${process.env.NEXTAUTH_URL}/dashboard/billing?success=true`;
+  const cancelUrl = params.cancelUrl || `${process.env.NEXTAUTH_URL}/checkout`;
+
+  const response = await fetch(`${NOWPAYMENTS_API_URL}/invoice`, {
+    method: "POST",
+    headers: {
+      "x-api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      price_amount: params.priceAmount,
+      price_currency: params.priceCurrency,
+      order_id: params.orderId,
+      order_description: params.orderDescription,
+      ipn_callback_url: ipnCallbackUrl,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`NOWPayments API error: ${error}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Create a new crypto payment (direct address)
  */
 export async function createCryptoPayment(
   params: CreatePaymentParams

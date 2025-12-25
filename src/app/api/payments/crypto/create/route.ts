@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { createCryptoPayment, CryptoCurrency } from "@/lib/nowpayments";
+import { createCryptoInvoice } from "@/lib/nowpayments";
 import { prisma } from "@/lib/prisma";
 import { ProductType } from "@prisma/client";
 
@@ -25,21 +25,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { productId, currency } = await request.json();
+    const { productId } = await request.json();
 
     // Validate product
     const product = PRODUCTS[productId];
     if (!product) {
       return NextResponse.json(
         { error: "Invalid product" },
-        { status: 400 }
-      );
-    }
-
-    // Validate currency
-    if (!["btc", "eth"].includes(currency)) {
-      return NextResponse.json(
-        { error: "Invalid cryptocurrency" },
         { status: 400 }
       );
     }
@@ -58,43 +50,35 @@ export async function POST(request: NextRequest) {
         productName: product.name,
         metadata: {
           productId,
-          cryptoCurrency: currency,
         },
       },
     });
 
-    // Create crypto payment via NOWPayments
-    const cryptoPayment = await createCryptoPayment({
+    // Create crypto invoice via NOWPayments (hosted payment page)
+    const invoice = await createCryptoInvoice({
       priceAmount: product.price,
       priceCurrency: "eur",
-      payCurrency: currency as CryptoCurrency,
       orderId: payment.id,
       orderDescription: `SocialNetworkArmy - ${product.name}`,
     });
 
-    // Update payment with provider transaction ID
+    // Update payment with invoice ID
     await prisma.payment.update({
       where: { id: payment.id },
       data: {
-        providerTxId: cryptoPayment.payment_id,
+        providerTxId: invoice.id,
         metadata: {
           productId,
-          cryptoCurrency: currency,
-          payAddress: cryptoPayment.pay_address,
-          payAmount: cryptoPayment.pay_amount,
+          invoiceId: invoice.id,
+          invoiceUrl: invoice.invoice_url,
         },
       },
     });
 
     return NextResponse.json({
       paymentId: payment.id,
-      cryptoPaymentId: cryptoPayment.payment_id,
-      payAddress: cryptoPayment.pay_address,
-      payAmount: cryptoPayment.pay_amount,
-      payCurrency: cryptoPayment.pay_currency,
-      priceAmount: cryptoPayment.price_amount,
-      priceCurrency: cryptoPayment.price_currency,
-      status: cryptoPayment.payment_status,
+      invoiceId: invoice.id,
+      invoiceUrl: invoice.invoice_url,
     });
   } catch (error) {
     console.error("Crypto payment error:", error);

@@ -16,7 +16,6 @@ import {
   Globe,
   Smartphone,
   Zap,
-  Copy,
 } from "lucide-react";
 
 // Products configuration
@@ -191,14 +190,8 @@ function CheckoutContent() {
   const { data: session, status } = useSession();
 
   const [selectedPayment, setSelectedPayment] = useState("card");
-  const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | null>(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [cryptoPayment, setCryptoPayment] = useState<{
-    payAddress: string;
-    payAmount: number;
-    payCurrency: string;
-  } | null>(null);
   const [cardDetails, setCardDetails] = useState({
     number: "",
     expiry: "",
@@ -223,15 +216,12 @@ function CheckoutContent() {
     setProcessing(true);
 
     try {
-      if (selectedPayment === "crypto" && selectedCrypto) {
-        // Create crypto payment via API
+      if (selectedPayment === "crypto") {
+        // Create crypto invoice and redirect to NOWPayments
         const response = await fetch("/api/payments/crypto/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productId,
-            currency: selectedCrypto,
-          }),
+          body: JSON.stringify({ productId }),
         });
 
         if (!response.ok) {
@@ -239,11 +229,9 @@ function CheckoutContent() {
         }
 
         const data = await response.json();
-        setCryptoPayment({
-          payAddress: data.payAddress,
-          payAmount: data.payAmount,
-          payCurrency: data.payCurrency,
-        });
+        // Redirect to NOWPayments hosted payment page
+        window.location.href = data.invoiceUrl;
+        return;
       } else {
         // Demo mode for card/paypal
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -483,100 +471,31 @@ function CheckoutContent() {
               </Card>
             )}
 
-            {/* Crypto */}
-            {selectedPayment === "crypto" && !cryptoPayment && (
+            {/* Crypto info */}
+            {selectedPayment === "crypto" && (
               <Card className="p-6">
-                <h2 className="text-lg font-semibold text-white mb-4">
-                  Select Cryptocurrency
-                </h2>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { id: "btc", name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
-                    { id: "eth", name: "Ethereum", symbol: "ETH", color: "#627EEA" },
-                  ].map((crypto) => (
-                    <button
-                      key={crypto.id}
-                      onClick={() => setSelectedCrypto(crypto.id as "btc" | "eth")}
-                      className={`p-4 rounded-lg border transition-colors text-center ${
-                        selectedCrypto === crypto.id
-                          ? "border-info bg-info/10"
-                          : "border-border hover:border-info"
-                      }`}
-                    >
-                      <div
-                        className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: `${crypto.color}20` }}
-                      >
-                        <span
-                          className="text-lg font-bold"
-                          style={{ color: crypto.color }}
-                        >
-                          {crypto.symbol.charAt(0)}
-                        </span>
-                      </div>
-                      <p className="text-sm font-medium text-white">
-                        {crypto.symbol}
-                      </p>
-                      <p className="text-xs text-muted">{crypto.name}</p>
-                    </button>
-                  ))}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-[#F7931A]/20 flex items-center justify-center">
+                    <span className="text-lg font-bold text-[#F7931A]">₿</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-[#627EEA]/20 flex items-center justify-center">
+                    <span className="text-lg font-bold text-[#627EEA]">Ξ</span>
+                  </div>
                 </div>
-                <p className="text-xs text-muted mt-4 text-center">
-                  Payment will be processed via NOWPayments
+                <p className="text-sm text-muted">
+                  You will be redirected to NOWPayments to complete your payment with Bitcoin or Ethereum.
                 </p>
               </Card>
             )}
 
-            {/* Crypto Payment Address */}
-            {selectedPayment === "crypto" && cryptoPayment && (
-              <Card className="p-6">
-                <h2 className="text-lg font-semibold text-white mb-4">
-                  Send Payment
-                </h2>
-                <div className="bg-black/50 p-4 rounded-lg border border-border mb-4">
-                  <p className="text-sm text-muted mb-2">Send exactly:</p>
-                  <p className="text-2xl font-bold text-white mb-4">
-                    {cryptoPayment.payAmount} {cryptoPayment.payCurrency.toUpperCase()}
-                  </p>
-                  <p className="text-sm text-muted mb-2">To this address:</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 text-xs text-info bg-surface p-2 rounded break-all">
-                      {cryptoPayment.payAddress}
-                    </code>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(cryptoPayment.payAddress);
-                      }}
-                      className="p-2 bg-surface hover:bg-surface-hover rounded transition-colors"
-                    >
-                      <Copy className="w-4 h-4 text-muted" />
-                    </button>
-                  </div>
-                </div>
-                <div className="bg-warning/10 border border-warning/30 rounded-lg p-4">
-                  <p className="text-sm text-warning">
-                    Send the exact amount to the address above. Your order will be activated automatically once the payment is confirmed (usually 10-30 minutes).
-                  </p>
-                </div>
-                <div className="mt-4 text-center">
-                  <Link href="/dashboard">
-                    <Button variant="outline">
-                      Check Order Status in Dashboard
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            )}
-
             {/* Pay Button */}
-            {!cryptoPayment && (
-              <Button
-                variant="pro"
-                size="lg"
-                className="w-full"
-                onClick={handlePayment}
-                disabled={processing || (selectedPayment === "crypto" && !selectedCrypto)}
-              >
+            <Button
+              variant="pro"
+              size="lg"
+              className="w-full"
+              onClick={handlePayment}
+              disabled={processing}
+            >
                 {processing ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
@@ -589,7 +508,6 @@ function CheckoutContent() {
                   </>
                 )}
               </Button>
-            )}
 
             {/* Security badges */}
             <div className="flex items-center justify-center gap-6 text-muted">
