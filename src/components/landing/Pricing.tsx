@@ -198,8 +198,8 @@ export function Pricing() {
               {/* CTA */}
               <Link href={
                 "hrefMonthly" in plan
-                  ? (isAnnual ? plan.hrefAnnual : plan.hrefMonthly)
-                  : plan.href
+                  ? (isAnnual ? (plan as any).hrefAnnual : (plan as any).hrefMonthly)
+                  : (plan as any).href || "/download"
               }>
                 <Button
                   variant={plan.popular ? "pro" : "outline"}
