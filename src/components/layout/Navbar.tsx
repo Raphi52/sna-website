@@ -33,7 +33,14 @@ export function Navbar() {
     // Scroll to element
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      const navbarHeight = 64; // Height of fixed navbar
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
 
     // Close mobile menu
