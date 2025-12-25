@@ -9,42 +9,52 @@ const faqs = [
   {
     question: "Is SocialNetworkArmy safe to use?",
     answer:
-      "Yes! We use advanced fingerprinting and anti-detection technology to keep your accounts safe. Each profile has a unique browser fingerprint, and we simulate human-like behavior to avoid detection. However, like any automation tool, use it responsibly and follow each platform's terms of service.",
+      "Yes! We use advanced fingerprinting technology that generates unique browser fingerprints for each profile. Combined with human-like behavior simulation and our optimized proxies, your accounts stay under the radar. Each profile has its own cookies, timezone, and device characteristics.",
   },
   {
     question: "What platforms are supported?",
     answer:
-      "Currently, we support Instagram, TikTok, Facebook, X (Twitter), and Reddit. Each platform has dedicated features optimized for its specific functionality. We're constantly working on adding more platforms.",
+      "We support Instagram, TikTok, Facebook, X (Twitter), and Reddit. Each platform has dedicated automation features: account creation, content publishing, engagement (likes, follows, comments), story viewing, DMs, and more. We update regularly to stay compatible with platform changes.",
   },
   {
-    question: "Can I use my own proxies?",
+    question: "Are proxies included in the plans?",
     answer:
-      "Absolutely! The Pro version supports custom proxies in the format host:port:username:password. You can assign different proxies to different profiles for maximum security and geographic targeting.",
+      "Yes! Pro includes 1 premium proxy per month, and Lifetime includes 10 proxies per month. These are high-quality residential and mobile proxies optimized for social media. You can also use your own proxies or purchase additional proxy packages from our store.",
   },
   {
-    question: "How does the licensing work?",
+    question: "How does the scheduler work?",
     answer:
-      "The Free version allows 1 account per platform. Pro gives you unlimited accounts and advanced features. Lifetime is a one-time payment that includes all Pro features plus future updates forever. All licenses are tied to your account and can be used on any device.",
+      "The 24/7 scheduler lets you automate tasks like posting content, engaging with followers, and warming up accounts. Set daily, weekly, or custom schedules. The bot runs in the background and executes tasks at the specified times with randomized delays for natural behavior.",
+  },
+  {
+    question: "What's the difference between Free, Pro, and Lifetime?",
+    answer:
+      "Free: 1 account per platform, basic automation. Pro (29€/month): Unlimited accounts, advanced fingerprinting, scheduler, 1 proxy/month, priority support. Lifetime (299€ once): Everything in Pro forever, 10 proxies/month, 1-on-1 onboarding, priority feature requests.",
   },
   {
     question: "What payment methods do you accept?",
     answer:
-      "We accept Visa, Mastercard, American Express via Stripe, PayPal, and cryptocurrencies including Bitcoin, Ethereum, and USDT. All payments are secure and processed by trusted payment providers.",
+      "We accept credit cards (Visa, Mastercard, Amex) via Stripe, PayPal, and cryptocurrencies (Bitcoin, Ethereum, USDT). All payments are secure and encrypted. Crypto payments are processed via NOWPayments.",
   },
   {
     question: "Can I get a refund?",
     answer:
-      "Yes, we offer a 7-day money-back guarantee for Pro subscriptions. If you're not satisfied, contact our support team within 7 days of purchase for a full refund. Lifetime licenses have a 14-day refund policy.",
+      "Yes! We offer a 7-day money-back guarantee on all plans. If you're not satisfied, contact support within 7 days for a full refund, no questions asked.",
   },
   {
-    question: "Do you offer updates?",
+    question: "How do I install and use the software?",
     answer:
-      "Yes! Pro subscribers receive all updates during their subscription period. Lifetime license holders get updates forever at no additional cost. We regularly update the software to maintain compatibility with platform changes.",
+      "Download the installer from your dashboard after purchase. The software runs on Windows 10/11. After installation, log in with your license key, add your proxies, create profiles, and start automating. We provide video tutorials and documentation to get you started.",
   },
   {
-    question: "Is there a trial period?",
+    question: "Do you offer support?",
     answer:
-      "The Free version serves as a trial - you can test all basic features with 1 account per platform. This gives you a good feel for how the software works before upgrading to Pro.",
+      "Free users get community support via our Discord. Pro and Lifetime users get priority email support with faster response times. Lifetime users also get access to 1-on-1 onboarding calls to help you set up your automation strategy.",
+  },
+  {
+    question: "Will my accounts get banned?",
+    answer:
+      "While no automation tool can guarantee 100% safety, our fingerprinting and proxy system significantly reduces detection risk. We recommend starting slow, warming up new accounts, and using quality proxies. Many users run hundreds of accounts without issues when following best practices.",
   },
 ];
 
