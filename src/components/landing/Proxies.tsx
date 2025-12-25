@@ -317,7 +317,7 @@ export function Proxies() {
 
                 <Link href="/auth/register?redirect=/dashboard/proxies">
                   <Button
-                    variant={pkg.popular ? "primary" : "secondary"}
+                    variant={pkg.popular ? "pro" : "default"}
                     className="w-full"
                   >
                     Get Started
