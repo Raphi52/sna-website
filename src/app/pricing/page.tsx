@@ -1,6 +1,6 @@
 import { Pricing } from "@/components/landing/Pricing";
 import { Proxies } from "@/components/landing/Proxies";
-import { Navbar } from "@/components/landing/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
