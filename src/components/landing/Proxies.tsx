@@ -212,7 +212,7 @@ export function Proxies() {
                     <>
                       <RotateCcw className="w-5 h-5 text-muted animate-spin" style={{ animationDuration: "3s" }} />
                       <span className="text-sm text-muted">
-                        IP rotates with every request
+                        IP rotates with every account created
                       </span>
                     </>
                   ) : (

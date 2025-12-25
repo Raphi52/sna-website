@@ -259,7 +259,7 @@ export default function ProxiesPage() {
                 </div>
                 <div className="mt-3 flex items-center gap-2 text-xs text-muted">
                   <RotateCcw className="w-3 h-3 animate-spin" style={{ animationDuration: "3s" }} />
-                  <span>IP rotates automatically with every request</span>
+                  <span>IP rotates automatically with every account created</span>
                 </div>
               </CardContent>
             </Card>
