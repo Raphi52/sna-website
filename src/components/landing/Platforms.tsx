@@ -17,7 +17,7 @@ const platforms = [
     features: [
       "Account creation",
       "Auto follow/unfollow",
-      "Story viewing",
+      "Comment popular posts",
       "Post scheduling",
       "DM automation",
     ],
