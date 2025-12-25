@@ -460,10 +460,14 @@ function MediaVisual() {
         {/* Before */}
         <div className="space-y-2">
           <div className="text-xs text-muted text-center">Original</div>
-          <div className="relative aspect-[9/16] bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center overflow-hidden">
-            <Image className="w-10 h-10 text-gray-500" />
-            <div className="absolute bottom-2 left-2 right-2 text-[8px] text-gray-500">
-              No caption
+          <div className="relative aspect-[9/16] rounded-lg overflow-hidden">
+            {/* Real photo placeholder - gradient simulating a photo */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur" />
+            </div>
+            <div className="absolute bottom-3 left-3 right-3">
+              <div className="text-[9px] text-white/50 text-center">No modifications</div>
             </div>
           </div>
         </div>
@@ -471,40 +475,49 @@ function MediaVisual() {
         {/* After */}
         <div className="space-y-2">
           <div className="text-xs text-muted text-center">Processed</div>
-          <div className="relative aspect-[9/16] bg-gradient-to-br from-instagram-violet via-instagram-rose to-instagram-orange rounded-lg overflow-hidden">
+          <div className="relative aspect-[9/16] rounded-lg overflow-hidden">
+            {/* Same photo with effects */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur" />
+            </div>
+
             {/* 1% crop indicator - dotted lines showing cropped edges */}
-            <div className="absolute inset-0 border-2 border-dashed border-white/30 m-[2px]" />
+            <div className="absolute inset-0 border-2 border-dashed border-white/40 m-[3px] rounded" />
 
             {/* Crop indicator badge */}
-            <div className="absolute top-2 right-2 bg-black/60 rounded px-1.5 py-0.5 flex items-center gap-1">
+            <div className="absolute top-2 right-2 bg-black/70 rounded px-1.5 py-0.5 flex items-center gap-1">
               <Maximize2 className="w-3 h-3 text-white" />
-              <span className="text-[8px] text-white">-1%</span>
+              <span className="text-[8px] text-white font-medium">-1%</span>
             </div>
 
-            {/* Center content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Image className="w-10 h-10 text-white/80" />
-            </div>
-
-            {/* Music indicator */}
-            <div className="absolute top-2 left-2 bg-black/60 rounded-full p-1.5 flex items-center gap-1">
-              <Music className="w-3 h-3 text-tiktok-cyan" />
-            </div>
-
-            {/* Caption overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-              <div className="flex items-center gap-1 mb-1">
-                <Type className="w-3 h-3 text-white" />
-                <span className="text-[8px] text-white/60">Caption</span>
+            {/* Subtitles in the middle */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-2">
+              <div className="bg-black/80 rounded px-2 py-1 mx-auto w-fit">
+                <p className="text-[11px] text-white font-bold text-center leading-tight">
+                  This is how you grow
+                </p>
               </div>
-              <p className="text-[10px] text-white font-medium leading-tight">
-                Check out this amazing content!
-              </p>
             </div>
 
-            {/* Success badge */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-success/90 rounded-full p-2">
-              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {/* Music indicator at bottom */}
+            <div className="absolute bottom-2 left-2 right-2">
+              <div className="bg-black/70 rounded-full px-2 py-1 flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-gradient-to-br from-tiktok-cyan to-tiktok-pink flex items-center justify-center">
+                  <Music className="w-2.5 h-2.5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[9px] text-white font-medium truncate">Timbaland - Apologize</p>
+                  <div className="h-0.5 bg-white/20 rounded-full mt-0.5">
+                    <div className="h-full w-[60%] bg-tiktok-cyan rounded-full" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Success checkmark */}
+            <div className="absolute top-2 left-2 bg-success rounded-full p-1">
+              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
             </div>
@@ -520,7 +533,7 @@ function MediaVisual() {
         </div>
         <div className="text-center p-2 bg-surface-hover rounded-lg">
           <Type className="w-4 h-4 text-warning mx-auto mb-1" />
-          <div className="text-[9px] text-muted">Caption</div>
+          <div className="text-[9px] text-muted">Subtitles</div>
         </div>
         <div className="text-center p-2 bg-surface-hover rounded-lg">
           <Music className="w-4 h-4 text-tiktok-cyan mx-auto mb-1" />
