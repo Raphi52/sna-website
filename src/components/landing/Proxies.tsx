@@ -84,7 +84,6 @@ const packages = [
       "10 GB Rotating Mobile Data",
       "All locations available",
       "Priority support",
-      "API access",
       "Usage analytics",
     ],
     popular: true,

@@ -19,7 +19,6 @@ const plans = [
       { text: "Advanced fingerprinting", included: false },
       { text: "Unlimited accounts", included: false },
       { text: "Priority support", included: false },
-      { text: "API access", included: false },
     ],
     cta: "Download Free",
     href: "/download",
@@ -37,7 +36,6 @@ const plans = [
       { text: "Proxy support", included: true },
       { text: "Priority support", included: true },
       { text: "All future updates", included: true },
-      { text: "API access", included: false },
     ],
     cta: "Get Pro",
     href: "/auth/register?plan=pro",
@@ -50,7 +48,6 @@ const plans = [
     features: [
       { text: "Everything in Pro", included: true },
       { text: "Lifetime updates", included: true },
-      { text: "API access", included: true },
       { text: "Custom integrations", included: true },
       { text: "1-on-1 onboarding", included: true },
       { text: "Priority feature requests", included: true },
@@ -222,23 +219,47 @@ export function Pricing() {
           className="mt-12 text-center"
         >
           <p className="text-sm text-muted mb-4">Accepted payment methods</p>
-          <div className="flex items-center justify-center gap-4 text-muted">
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-6 h-4" viewBox="0 0 50 16" fill="none">
+                <path d="M19.5 1L16.5 15H13L16 1H19.5Z" fill="#1434CB"/>
+                <path d="M32 1L28.5 15H25L28.5 1H32Z" fill="#1434CB"/>
+                <path d="M10 1L6.5 10.5L6 8L4.5 2C4.5 2 4.3 1 3 1H0V1.5C0 1.5 1.5 1.8 3 2.5L6 15H9.5L14 1H10Z" fill="#1434CB"/>
+                <path d="M42 1C41 1 40.5 1.5 40 2.5L34.5 15H38L38.7 13H43L43.4 15H46.5L43.5 1H42ZM39.5 10L41.5 4L42.5 10H39.5Z" fill="#1434CB"/>
+              </svg>
               Visa
             </span>
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-6 h-4" viewBox="0 0 50 30" fill="none">
+                <circle cx="18" cy="15" r="12" fill="#EB001B"/>
+                <circle cx="32" cy="15" r="12" fill="#F79E1B"/>
+                <path d="M25 6C27.5 8 29 11.5 29 15C29 18.5 27.5 22 25 24C22.5 22 21 18.5 21 15C21 11.5 22.5 8 25 6Z" fill="#FF5F00"/>
+              </svg>
               Mastercard
             </span>
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#00457C">
+                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.633h6.116c2.058 0 3.485.436 4.238 1.298.341.39.56.831.67 1.35.115.547.116 1.203.003 2.014l-.008.051v.473l.368.21c.31.164.558.353.748.567.318.36.524.824.612 1.378.091.57.063 1.248-.085 2.014-.172.89-.451 1.662-.833 2.298a4.728 4.728 0 0 1-1.313 1.458 5.103 5.103 0 0 1-1.7.819 8.036 8.036 0 0 1-2.017.239H11.57a.94.94 0 0 0-.93.795l-.041.225-.643 4.073-.031.161a.94.94 0 0 1-.928.795H7.076z"/>
+              </svg>
               PayPal
             </span>
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#F7931A">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 10.889c.076-.502-.307-.772-.83-.952l.17-.68-1.042-.26-.165.664c-.274-.068-.555-.132-.835-.196l.167-.67-1.042-.259-.17.68c-.227-.052-.45-.103-.665-.157l.001-.004-1.437-.359-.22.834s.772.177.756.188c.421.105.497.383.484.604l-.485 1.946c.029.007.066.018.108.035l-.11-.028-.68 2.727c-.052.128-.182.32-.476.248.01.015-.756-.189-.756-.189l-.517.894 1.357.338c.252.063.5.13.743.191l-.172.689 1.041.26.17-.682c.284.077.56.148.828.215l-.168.675 1.042.26.172-.69c1.413.268 2.476.16 2.923-.867.36-.828-.018-1.307-.613-1.618.436-.1.764-.387.852-.979zm-1.523 2.135c-.256 1.026-1.986.471-2.547.332l.454-1.822c.561.14 2.362.416 2.093 1.49zm.255-2.145c-.233.935-1.673.46-2.14.344l.412-1.653c.466.116 1.97.333 1.728 1.31z"/>
+              </svg>
               Bitcoin
             </span>
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#627EEA">
+                <path d="M12 0L4.5 12.3 12 16.5l7.5-4.2L12 0z"/>
+                <path d="M4.5 13.5L12 24l7.5-10.5L12 17.7 4.5 13.5z" fillOpacity="0.6"/>
+              </svg>
               Ethereum
             </span>
-            <span className="px-3 py-1 bg-surface rounded border border-border text-xs">
+            <span className="px-3 py-2 bg-surface rounded border border-border text-xs flex items-center gap-2">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#26A17B">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.5 7.5h-3v3h3v1.5h-3V18h-3v-6H7.5v-1.5h3v-3H7.5V6h9v1.5z"/>
+              </svg>
               USDT
             </span>
           </div>
