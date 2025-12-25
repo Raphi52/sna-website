@@ -262,16 +262,21 @@ function CheckoutContent() {
     setRefreshingUsd(true);
     try {
       const symbol = cryptoPayment.payCurrency.toLowerCase();
+      const coinId = symbol.includes("btc") ? "bitcoin" : "ethereum";
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${symbol === "btc" ? "bitcoin" : "ethereum"}&vs_currencies=usd`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`
       );
       const data = await response.json();
-      const price = symbol === "btc" ? data.bitcoin?.usd : data.ethereum?.usd;
+      const price = data[coinId]?.usd;
       if (price) {
         setUsdValue(cryptoPayment.payAmount * price);
       }
     } catch (error) {
       console.error("Failed to fetch USD value:", error);
+      // Fallback: use product price as USD estimate
+      if (product) {
+        setUsdValue(product.price * 1.05); // EUR to USD rough estimate
+      }
     } finally {
       setRefreshingUsd(false);
     }

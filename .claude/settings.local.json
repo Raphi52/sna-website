@@ -19,7 +19,9 @@
       "Bash(powershell -Command \"\\(Get-ChildItem ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\*.jpg''\\).Count\")",
       "Bash(powershell -Command:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)"
     ]
   }
 }
