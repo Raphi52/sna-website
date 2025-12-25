@@ -297,66 +297,101 @@ export function Features() {
   );
 }
 
-// Scheduler Visual Component - Matches real app timeline
+// Scheduler Visual Component - Clean calendar grid style
 function SchedulerVisual() {
-  const hours = ["14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h"];
-  const tasks = [
-    { hour: 0, name: "REELS", color: "bg-orange-500", time: "14:19" },
-    { hour: 0, name: "PUBLISH", color: "bg-yellow-500", time: "14:23", offset: 40 },
-    { hour: 0, name: "HOME", color: "bg-pink-500", time: "14:27", offset: 80 },
-    { hour: 0, name: "STORIES", color: "bg-purple-500", time: "14:29", offset: 120 },
-    { hour: 1, name: "CLOSE", color: "bg-gray-500", time: "14:38" },
-    { hour: 5, name: "REELS", color: "bg-orange-500", time: "19:18" },
-    { hour: 6, name: "HOME", color: "bg-pink-500", time: "20:21" },
-    { hour: 7, name: "STOP", color: "bg-pink-600", time: "21:25" },
-  ];
+  const hours = Array.from({ length: 24 }, (_, i) => i);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-white">publish-everyday</span>
-        <span className="text-xs text-muted">148 tasks | 15 accounts</span>
-      </div>
-      {/* Timeline header */}
-      <div className="flex gap-1 text-[10px] text-muted">
-        {hours.map((h) => (
-          <div key={h} className="flex-1 text-center">{h}</div>
-        ))}
-      </div>
-      {/* Timeline rows */}
-      <div className="space-y-1">
-        {["lunachic_aa", "james.davis", "_M_iacosta"].map((profile, rowIdx) => (
-          <div key={profile} className="flex gap-1 h-8 items-center">
-            <span className="text-[9px] text-muted w-16 truncate">{profile}</span>
-            <div className="flex-1 flex gap-1 relative h-full">
-              {hours.map((_, colIdx) => (
-                <div key={colIdx} className="flex-1 bg-surface-hover/50 rounded-sm relative">
-                  {rowIdx === 0 && tasks.filter(t => t.hour === colIdx).map((task, i) => (
-                    <div
-                      key={i}
-                      className={`absolute ${task.color} text-[8px] text-white px-1 rounded-sm whitespace-nowrap`}
-                      style={{ top: task.offset ? `${task.offset}%` : '0', left: 0 }}
-                    >
-                      {task.name}
-                    </div>
-                  ))}
-                  {rowIdx === 1 && colIdx === 5 && (
-                    <div className="absolute bg-green-500 text-[8px] text-white px-1 rounded-sm">TARGET</div>
-                  )}
-                  {rowIdx === 2 && colIdx === 1 && (
-                    <div className="absolute bg-gray-500 text-[8px] text-white px-1 rounded-sm">CLOSE</div>
-                  )}
-                </div>
-              ))}
-            </div>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 gradient-instagram rounded-lg flex items-center justify-center">
+            <Calendar className="w-4 h-4 text-white" />
           </div>
-        ))}
+          <div>
+            <span className="text-sm font-medium text-white">Monday Schedule</span>
+            <div className="text-[10px] text-muted">12 tasks planned</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="px-2 py-1 bg-success/20 text-success text-[10px] rounded">Active</div>
+        </div>
       </div>
-      <div className="flex items-center gap-2 pt-2 text-[10px] text-muted border-t border-border">
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-orange-500"></span> Reels</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-pink-500"></span> Home</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-purple-500"></span> Stories</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-green-500"></span> Target</span>
+
+      {/* 24h Grid */}
+      <div className="relative">
+        {/* Hour markers */}
+        <div className="flex justify-between text-[9px] text-muted mb-1 px-1">
+          <span>00:00</span>
+          <span>06:00</span>
+          <span>12:00</span>
+          <span>18:00</span>
+          <span>24:00</span>
+        </div>
+
+        {/* Timeline bar */}
+        <div className="h-12 bg-surface-hover rounded-lg relative overflow-hidden">
+          {/* Grid lines */}
+          <div className="absolute inset-0 flex">
+            {[0, 6, 12, 18].map((h) => (
+              <div key={h} className="flex-1 border-r border-border/30" />
+            ))}
+            <div className="flex-1" />
+          </div>
+
+          {/* Task blocks */}
+          <div className="absolute top-1 bottom-1 left-[8%] w-[6%] bg-gradient-to-r from-orange-500 to-orange-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">REELS</span>
+          </div>
+          <div className="absolute top-1 bottom-1 left-[15%] w-[4%] bg-gradient-to-r from-pink-500 to-pink-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">HOME</span>
+          </div>
+          <div className="absolute top-1 bottom-1 left-[35%] w-[8%] bg-gradient-to-r from-yellow-500 to-yellow-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">PUBLISH</span>
+          </div>
+          <div className="absolute top-1 bottom-1 left-[50%] w-[5%] bg-gradient-to-r from-purple-500 to-purple-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">STORY</span>
+          </div>
+          <div className="absolute top-1 bottom-1 left-[70%] w-[10%] bg-gradient-to-r from-green-500 to-green-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">TARGET</span>
+          </div>
+          <div className="absolute top-1 bottom-1 left-[85%] w-[6%] bg-gradient-to-r from-blue-500 to-blue-600 rounded flex items-center justify-center">
+            <span className="text-[8px] text-white font-medium">DM</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Profiles list */}
+      <div className="space-y-2">
+        <div className="text-[10px] text-muted">Profiles in group</div>
+        <div className="flex flex-wrap gap-2">
+          {["lunachic_aa", "james.davis", "mia_costa", "+12 more"].map((name) => (
+            <div
+              key={name}
+              className="px-2 py-1 bg-surface-hover rounded text-[10px] text-white/70 flex items-center gap-1"
+            >
+              {name !== "+12 more" && <div className="w-1.5 h-1.5 rounded-full bg-success" />}
+              {name}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Task legend */}
+      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-border">
+        <span className="flex items-center gap-1.5 text-[10px] text-muted">
+          <span className="w-3 h-3 rounded bg-gradient-to-r from-orange-500 to-orange-600"></span> Reels
+        </span>
+        <span className="flex items-center gap-1.5 text-[10px] text-muted">
+          <span className="w-3 h-3 rounded bg-gradient-to-r from-yellow-500 to-yellow-600"></span> Publish
+        </span>
+        <span className="flex items-center gap-1.5 text-[10px] text-muted">
+          <span className="w-3 h-3 rounded bg-gradient-to-r from-green-500 to-green-600"></span> Target
+        </span>
+        <span className="flex items-center gap-1.5 text-[10px] text-muted">
+          <span className="w-3 h-3 rounded bg-gradient-to-r from-blue-500 to-blue-600"></span> DM
+        </span>
       </div>
     </div>
   );
