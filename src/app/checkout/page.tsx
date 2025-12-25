@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button, Card, Input } from "@/components/ui";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 import {
   ArrowLeft,
   CreditCard,
@@ -187,6 +188,7 @@ function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
+  const { format } = useCurrency();
 
   const [selectedPayment, setSelectedPayment] = useState("card");
   const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | null>(null);
@@ -352,7 +354,7 @@ function CheckoutContent() {
           <div className="bg-surface-hover rounded-lg p-4 mb-6">
             <p className="text-sm text-muted mb-1">Order Summary</p>
             <p className="text-lg font-semibold text-white">{product.name}</p>
-            <p className="text-2xl font-bold text-success">{product.price}€</p>
+            <p className="text-2xl font-bold text-success">{format(product.price)}</p>
           </div>
           <div className="flex flex-col gap-3">
             <Link href="/dashboard">
@@ -666,7 +668,7 @@ function CheckoutContent() {
                 ) : (
                   <>
                     <Lock className="w-5 h-5 mr-2" />
-                    Pay {product.price}€
+                    Pay {format(product.price)}
                   </>
                 )}
               </Button>
@@ -727,17 +729,17 @@ function CheckoutContent() {
               <div className="py-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Subtotal</span>
-                  <span className="text-white">{product.price}€</span>
+                  <span className="text-white">{format(product.price)}</span>
                 </div>
                 {"savings" in product && (product as { savings?: number }).savings && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted">Annual savings</span>
-                    <span className="text-success">-{(product as { savings?: number }).savings}€</span>
+                    <span className="text-success">-{format((product as { savings?: number }).savings || 0)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
                   <span className="text-muted">Tax</span>
-                  <span className="text-white">0€</span>
+                  <span className="text-white">{format(0)}</span>
                 </div>
               </div>
 
@@ -747,7 +749,7 @@ function CheckoutContent() {
                   <span className="text-lg font-semibold text-white">Total</span>
                   <div className="text-right">
                     <span className="text-2xl font-bold text-white">
-                      {product.price}€
+                      {format(product.price)}
                     </span>
                     {product.period !== "once" && (
                       <span className="text-muted text-sm ml-1">
@@ -758,7 +760,7 @@ function CheckoutContent() {
                 </div>
                 {"monthlyPrice" in product && (product as { monthlyPrice?: number }).monthlyPrice && (
                   <p className="text-xs text-muted text-right mt-1">
-                    ({(product as { monthlyPrice?: number }).monthlyPrice}€/month billed annually)
+                    ({format((product as { monthlyPrice?: number }).monthlyPrice || 0)}/month billed annually)
                   </p>
                 )}
               </div>

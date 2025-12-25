@@ -5,6 +5,7 @@ import { Button } from "@/components/ui";
 import { Check, X, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useCurrency } from "@/components/providers/CurrencyProvider";
 
 const plans = [
   {
@@ -62,6 +63,7 @@ const plans = [
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(true);
+  const { format, convert, symbol } = useCurrency();
 
   return (
     <section id="pricing" className="py-20">
@@ -151,11 +153,11 @@ export function Pricing() {
                 <p className="text-sm text-muted mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center">
                   <span className="text-4xl font-bold text-white">
-                    {plan.isLifetime
+                    {format(plan.isLifetime
                       ? plan.price.monthly
                       : isAnnual
                       ? Math.round(plan.price.annual / 12)
-                      : plan.price.monthly}€
+                      : plan.price.monthly)}
                   </span>
                   {!plan.isLifetime && plan.price.monthly > 0 && (
                     <span className="text-muted ml-2">/month</span>
@@ -166,7 +168,7 @@ export function Pricing() {
                 </div>
                 {isAnnual && !plan.isLifetime && plan.price.annual > 0 && (
                   <p className="text-xs text-muted mt-1">
-                    Billed {plan.price.annual}€/year
+                    Billed {format(plan.price.annual)}/year
                   </p>
                 )}
               </div>
