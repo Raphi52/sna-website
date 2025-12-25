@@ -16,6 +16,9 @@ import {
   Globe,
   Smartphone,
   Zap,
+  Copy,
+  QrCode,
+  ExternalLink,
 } from "lucide-react";
 
 // Products configuration
@@ -190,8 +193,15 @@ function CheckoutContent() {
   const { data: session, status } = useSession();
 
   const [selectedPayment, setSelectedPayment] = useState("card");
+  const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | null>(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [cryptoPayment, setCryptoPayment] = useState<{
+    payAddress: string;
+    payAmount: number;
+    payCurrency: string;
+    qrCodeUrl: string;
+  } | null>(null);
   const [cardDetails, setCardDetails] = useState({
     number: "",
     expiry: "",
@@ -216,12 +226,12 @@ function CheckoutContent() {
     setProcessing(true);
 
     try {
-      if (selectedPayment === "crypto") {
-        // Create crypto invoice and redirect to NOWPayments
-        const response = await fetch("/api/payments/crypto/create", {
+      if (selectedPayment === "crypto" && selectedCrypto) {
+        // Create crypto payment with QR code
+        const response = await fetch("/api/payments/crypto/qr", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId }),
+          body: JSON.stringify({ productId, currency: selectedCrypto }),
         });
 
         if (!response.ok) {
@@ -229,9 +239,12 @@ function CheckoutContent() {
         }
 
         const data = await response.json();
-        // Redirect to NOWPayments hosted payment page
-        window.location.href = data.invoiceUrl;
-        return;
+        setCryptoPayment({
+          payAddress: data.payAddress,
+          payAmount: data.payAmount,
+          payCurrency: data.payCurrency,
+          qrCodeUrl: data.qrCodeUrl,
+        });
       } else {
         // Demo mode for card/paypal
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -241,6 +254,29 @@ function CheckoutContent() {
       console.error("Payment error:", error);
       alert("Payment failed. Please try again.");
     } finally {
+      setProcessing(false);
+    }
+  };
+
+  // Redirect to NOWPayments hosted page
+  const handleCryptoRedirect = async () => {
+    setProcessing(true);
+    try {
+      const response = await fetch("/api/payments/crypto/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create payment");
+      }
+
+      const data = await response.json();
+      window.location.href = data.invoiceUrl;
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment failed. Please try again.");
       setProcessing(false);
     }
   };
@@ -471,35 +507,136 @@ function CheckoutContent() {
               </Card>
             )}
 
-            {/* Crypto info */}
-            {selectedPayment === "crypto" && (
+            {/* Crypto selection */}
+            {selectedPayment === "crypto" && !cryptoPayment && (
               <Card className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-[#F7931A]/20 flex items-center justify-center">
-                    <span className="text-lg font-bold text-[#F7931A]">₿</span>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-[#627EEA]/20 flex items-center justify-center">
-                    <span className="text-lg font-bold text-[#627EEA]">Ξ</span>
-                  </div>
+                <h2 className="text-lg font-semibold text-white mb-4">
+                  Select Cryptocurrency
+                </h2>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {[
+                    { id: "btc", name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
+                    { id: "eth", name: "Ethereum", symbol: "ETH", color: "#627EEA" },
+                  ].map((crypto) => (
+                    <button
+                      key={crypto.id}
+                      onClick={() => setSelectedCrypto(crypto.id as "btc" | "eth")}
+                      className={`p-4 rounded-lg border transition-colors text-center ${
+                        selectedCrypto === crypto.id
+                          ? "border-info bg-info/10"
+                          : "border-border hover:border-info"
+                      }`}
+                    >
+                      <div
+                        className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: `${crypto.color}20` }}
+                      >
+                        <span
+                          className="text-lg font-bold"
+                          style={{ color: crypto.color }}
+                        >
+                          {crypto.symbol.charAt(0) === "B" ? "₿" : "Ξ"}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-white">
+                        {crypto.symbol}
+                      </p>
+                      <p className="text-xs text-muted">{crypto.name}</p>
+                    </button>
+                  ))}
                 </div>
-                <p className="text-sm text-muted">
-                  You will be redirected to NOWPayments to complete your payment with Bitcoin or Ethereum.
-                </p>
+                <div className="border-t border-border pt-4">
+                  <button
+                    onClick={handleCryptoRedirect}
+                    disabled={processing}
+                    className="w-full text-sm text-info hover:underline flex items-center justify-center gap-2"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Or pay via NOWPayments page
+                  </button>
+                </div>
+              </Card>
+            )}
+
+            {/* Crypto QR Code Payment */}
+            {selectedPayment === "crypto" && cryptoPayment && (
+              <Card className="p-6">
+                <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <QrCode className="w-5 h-5" />
+                  Scan to Pay
+                </h2>
+                <div className="flex flex-col items-center">
+                  {/* QR Code */}
+                  <div className="bg-white p-3 rounded-lg mb-4">
+                    <img
+                      src={cryptoPayment.qrCodeUrl}
+                      alt="Payment QR Code"
+                      className="w-48 h-48"
+                    />
+                  </div>
+
+                  {/* Amount */}
+                  <div className="text-center mb-4">
+                    <p className="text-sm text-muted mb-1">Send exactly:</p>
+                    <p className="text-2xl font-bold text-white">
+                      {cryptoPayment.payAmount} {cryptoPayment.payCurrency.toUpperCase()}
+                    </p>
+                  </div>
+
+                  {/* Address */}
+                  <div className="w-full bg-black/50 p-3 rounded-lg border border-border">
+                    <p className="text-xs text-muted mb-2">To this address:</p>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 text-xs text-info break-all">
+                        {cryptoPayment.payAddress}
+                      </code>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(cryptoPayment.payAddress);
+                        }}
+                        className="p-2 bg-surface hover:bg-surface-hover rounded transition-colors flex-shrink-0"
+                        title="Copy address"
+                      >
+                        <Copy className="w-4 h-4 text-muted" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Warning */}
+                  <div className="mt-4 bg-warning/10 border border-warning/30 rounded-lg p-3 w-full">
+                    <p className="text-xs text-warning text-center">
+                      Your order will be activated automatically once payment is confirmed (10-30 min)
+                    </p>
+                  </div>
+
+                  {/* Dashboard link */}
+                  <Link href="/dashboard/billing" className="mt-4">
+                    <Button variant="outline" size="sm">
+                      Check Order Status
+                    </Button>
+                  </Link>
+                </div>
               </Card>
             )}
 
             {/* Pay Button */}
-            <Button
-              variant="pro"
-              size="lg"
-              className="w-full"
-              onClick={handlePayment}
-              disabled={processing}
-            >
+            {!cryptoPayment && (
+              <Button
+                variant="pro"
+                size="lg"
+                className="w-full"
+                onClick={handlePayment}
+                disabled={processing || (selectedPayment === "crypto" && !selectedCrypto)}
+              >
                 {processing ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Processing...
+                  </>
+                ) : selectedPayment === "crypto" ? (
+                  <>
+                    <QrCode className="w-5 h-5 mr-2" />
+                    Generate QR Code
                   </>
                 ) : (
                   <>
@@ -508,6 +645,7 @@ function CheckoutContent() {
                   </>
                 )}
               </Button>
+            )}
 
             {/* Security badges */}
             <div className="flex items-center justify-center gap-6 text-muted">

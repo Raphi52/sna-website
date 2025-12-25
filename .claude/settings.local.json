@@ -15,7 +15,9 @@
       "Bash(dir:*)",
       "Bash(powershell -Command \"\\(Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg''\\).Count; \\(Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.mp4''\\).Count; \\(Get-ChildItem ''D:\\\\source\\\\MiaCostaPrivate\\\\*.mp4''\\).Count\")",
       "Bash(powershell -Command \"Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg'' | Select-Object -First 20 | Copy-Item -Destination ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\''\")",
-      "Bash(powershell -Command \"Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg'' | Select-Object -First 50 | Copy-Item -Destination ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\'' -Force\")"
+      "Bash(powershell -Command \"Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg'' | Select-Object -First 50 | Copy-Item -Destination ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\'' -Force\")",
+      "Bash(powershell -Command \"\\(Get-ChildItem ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\*.jpg''\\).Count\")",
+      "Bash(powershell -Command:*)"
     ]
   }
 }
