@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Badge, Button } from "@/components/ui";
 import {
   Globe,
@@ -16,10 +16,38 @@ import {
   EyeOff,
   Download,
   RotateCcw,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 
-// Mock data - will be replaced with actual data fetch
+interface ProxySubscription {
+  id: string;
+  packageName: string;
+  packageSlug: string;
+  status: string;
+  startDate: string;
+  expiresAt: string;
+  daysRemaining: number;
+  staticProxies: Array<{
+    id: string;
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    country: string;
+    city: string;
+  }>;
+  rotatingEndpoint: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  } | null;
+  rotatingUsedGB: number;
+  rotatingTotalGB: number;
+  unlimitedRotating: boolean;
+}
+
 const packages = [
   {
     id: "starter",
@@ -55,33 +83,28 @@ const packages = [
 export default function ProxiesPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [subscriptions, setSubscriptions] = useState<ProxySubscription[]>([]);
 
-  // TODO: Fetch actual proxy data from API
-  const activeOrder = null as {
-    id: string;
-    packageName: string;
-    status: string;
-    expiresAt: string;
-    daysRemaining: number;
-    staticProxies: Array<{
-      id: string;
-      host: string;
-      port: number;
-      username: string;
-      password: string;
-      country: string;
-      city: string;
-    }>;
-    rotatingEndpoint: {
-      host: string;
-      port: number;
-      username: string;
-      password: string;
-    };
-    rotatingUsedGB: number;
-    rotatingTotalGB: number;
-    unlimitedRotating: boolean;
-  } | null;
+  useEffect(() => {
+    fetchProxies();
+  }, []);
+
+  const fetchProxies = async () => {
+    try {
+      const res = await fetch("/api/proxies");
+      if (res.ok) {
+        const data = await res.json();
+        setSubscriptions(data.subscriptions || []);
+      }
+    } catch (error) {
+      console.error("Error fetching proxies:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const activeOrder = subscriptions.length > 0 ? subscriptions[0] : null;
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -96,6 +119,14 @@ export default function ProxiesPage() {
   const formatProxyString = (proxy: { host: string; port: number; username: string; password: string }) => {
     return `${proxy.host}:${proxy.port}:${proxy.username}:${proxy.password}`;
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-muted" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -177,127 +208,131 @@ export default function ProxiesPage() {
           </Card>
 
           {/* Rotating Mobile Proxy */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Smartphone className="w-5 h-5 mr-2 text-tiktok-cyan" />
-                Rotating Mobile Proxy
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted text-sm mb-4">
-                Use this endpoint for account creation. IP rotates with every request.
-              </p>
-              <div className="bg-black/50 p-4 rounded-lg border border-border">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-muted">Connection String</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => togglePassword("rotating")}
-                      className="text-muted hover:text-white transition-colors"
-                    >
-                      {showPasswords["rotating"] ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleCopy(
-                          formatProxyString(activeOrder.rotatingEndpoint),
-                          "rotating"
-                        )
-                      }
-                      className="text-muted hover:text-white transition-colors"
-                    >
-                      {copiedId === "rotating" ? (
-                        <Check className="w-4 h-4 text-success" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                    </button>
+          {activeOrder.rotatingEndpoint && (
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Smartphone className="w-5 h-5 mr-2 text-tiktok-cyan" />
+                  Rotating Mobile Proxy
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted text-sm mb-4">
+                  Use this endpoint for account creation. IP rotates with every request.
+                </p>
+                <div className="bg-black/50 p-4 rounded-lg border border-border">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs text-muted">Connection String</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => togglePassword("rotating")}
+                        className="text-muted hover:text-white transition-colors"
+                      >
+                        {showPasswords["rotating"] ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleCopy(
+                            formatProxyString(activeOrder.rotatingEndpoint!),
+                            "rotating"
+                          )
+                        }
+                        className="text-muted hover:text-white transition-colors"
+                      >
+                        {copiedId === "rotating" ? (
+                          <Check className="w-4 h-4 text-success" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
+                  <code className="text-sm text-white font-mono break-all">
+                    {showPasswords["rotating"]
+                      ? formatProxyString(activeOrder.rotatingEndpoint)
+                      : `${activeOrder.rotatingEndpoint.host}:${activeOrder.rotatingEndpoint.port}:${activeOrder.rotatingEndpoint.username}:********`}
+                  </code>
                 </div>
-                <code className="text-sm text-white font-mono break-all">
-                  {showPasswords["rotating"]
-                    ? formatProxyString(activeOrder.rotatingEndpoint)
-                    : `${activeOrder.rotatingEndpoint.host}:${activeOrder.rotatingEndpoint.port}:${activeOrder.rotatingEndpoint.username}:••••••••`}
-                </code>
-              </div>
-              <div className="mt-3 flex items-center gap-2 text-xs text-muted">
-                <RotateCcw className="w-3 h-3 animate-spin" style={{ animationDuration: "3s" }} />
-                <span>IP rotates automatically with every request</span>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="mt-3 flex items-center gap-2 text-xs text-muted">
+                  <RotateCcw className="w-3 h-3 animate-spin" style={{ animationDuration: "3s" }} />
+                  <span>IP rotates automatically with every request</span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Static Residential Proxies */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center">
-                  <Globe className="w-5 h-5 mr-2 text-instagram-violet" />
-                  Static Residential Proxies
-                </span>
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export All
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted text-sm mb-4">
-                Use these dedicated IPs for running your accounts. Each proxy maintains the same IP.
-              </p>
-              <div className="space-y-3">
-                {activeOrder.staticProxies.map((proxy) => (
-                  <div
-                    key={proxy.id}
-                    className="bg-black/50 p-4 rounded-lg border border-border"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-muted" />
-                        <span className="text-sm text-white">
-                          {proxy.city}, {proxy.country}
-                        </span>
+          {activeOrder.staticProxies.length > 0 && (
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span className="flex items-center">
+                    <Globe className="w-5 h-5 mr-2 text-instagram-violet" />
+                    Static Residential Proxies
+                  </span>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Export All
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted text-sm mb-4">
+                  Use these dedicated IPs for running your accounts. Each proxy maintains the same IP.
+                </p>
+                <div className="space-y-3">
+                  {activeOrder.staticProxies.map((proxy) => (
+                    <div
+                      key={proxy.id}
+                      className="bg-black/50 p-4 rounded-lg border border-border"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-muted" />
+                          <span className="text-sm text-white">
+                            {proxy.city}, {proxy.country}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => togglePassword(proxy.id)}
+                            className="text-muted hover:text-white transition-colors"
+                          >
+                            {showPasswords[proxy.id] ? (
+                              <EyeOff className="w-4 h-4" />
+                            ) : (
+                              <Eye className="w-4 h-4" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleCopy(formatProxyString(proxy), proxy.id)
+                            }
+                            className="text-muted hover:text-white transition-colors"
+                          >
+                            {copiedId === proxy.id ? (
+                              <Check className="w-4 h-4 text-success" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => togglePassword(proxy.id)}
-                          className="text-muted hover:text-white transition-colors"
-                        >
-                          {showPasswords[proxy.id] ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleCopy(formatProxyString(proxy), proxy.id)
-                          }
-                          className="text-muted hover:text-white transition-colors"
-                        >
-                          {copiedId === proxy.id ? (
-                            <Check className="w-4 h-4 text-success" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
+                      <code className="text-xs text-muted font-mono">
+                        {showPasswords[proxy.id]
+                          ? formatProxyString(proxy)
+                          : `${proxy.host}:${proxy.port}:${proxy.username}:********`}
+                      </code>
                     </div>
-                    <code className="text-xs text-muted font-mono">
-                      {showPasswords[proxy.id]
-                        ? formatProxyString(proxy)
-                        : `${proxy.host}:${proxy.port}:${proxy.username}:••••••••`}
-                    </code>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Renew/Upgrade */}
           <Card>
