@@ -570,10 +570,10 @@ function CheckoutContent() {
                   <span className="text-muted">Subtotal</span>
                   <span className="text-white">{product.price}€</span>
                 </div>
-                {"savings" in product && product.savings && (
+                {"savings" in product && (product as { savings?: number }).savings && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted">Annual savings</span>
-                    <span className="text-success">-{product.savings}€</span>
+                    <span className="text-success">-{(product as { savings?: number }).savings}€</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
@@ -597,9 +597,9 @@ function CheckoutContent() {
                     )}
                   </div>
                 </div>
-                {"monthlyPrice" in product && product.monthlyPrice && (
+                {"monthlyPrice" in product && (product as { monthlyPrice?: number }).monthlyPrice && (
                   <p className="text-xs text-muted text-right mt-1">
-                    ({product.monthlyPrice}€/month billed annually)
+                    ({(product as { monthlyPrice?: number }).monthlyPrice}€/month billed annually)
                   </p>
                 )}
               </div>
