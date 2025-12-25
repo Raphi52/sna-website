@@ -4,25 +4,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import * as bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
-const isProduction = process.env.NODE_ENV === "production";
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   trustHost: true,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  cookies: {
-    sessionToken: {
-      name: isProduction ? "__Secure-authjs.session-token" : "authjs.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: isProduction,
-      },
-    },
   },
   pages: {
     signIn: "/auth/login",
