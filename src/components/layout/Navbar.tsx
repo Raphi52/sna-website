@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard } from "lucide-react";
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -17,6 +18,7 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     // Only handle anchor links
@@ -75,16 +77,27 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/auth/login">
-              <Button variant="ghost" size="sm">
-                Login
-              </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button variant="pro" size="sm">
-                Get Started
-              </Button>
-            </Link>
+            {session ? (
+              <Link href="/dashboard">
+                <Button variant="pro" size="sm">
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" size="sm">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button variant="pro" size="sm">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -112,16 +125,27 @@ export function Navbar() {
               </a>
             ))}
             <div className="pt-4 border-t border-border space-y-2">
-              <Link href="/auth/login" className="block">
-                <Button variant="ghost" size="sm" className="w-full">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/auth/register" className="block">
-                <Button variant="pro" size="sm" className="w-full">
-                  Get Started
-                </Button>
-              </Link>
+              {session ? (
+                <Link href="/dashboard" className="block" onClick={() => setIsOpen(false)}>
+                  <Button variant="pro" size="sm" className="w-full">
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="block" onClick={() => setIsOpen(false)}>
+                    <Button variant="ghost" size="sm" className="w-full">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/auth/register" className="block" onClick={() => setIsOpen(false)}>
+                    <Button variant="pro" size="sm" className="w-full">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
