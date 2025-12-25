@@ -403,7 +403,7 @@ function BotVisual() {
     { name: "Follow", gradient: "gradient-instagram" },
     { name: "Scroll Reels", gradient: "gradient-instagram" },
     { name: "Scroll Home", gradient: "gradient-instagram" },
-    { name: "Watch Stories", gradient: "gradient-instagram" },
+    { name: "Publish Stories", gradient: "gradient-instagram" },
     { name: "Publish", gradient: "gradient-instagram" },
     { name: "Messages", gradient: "gradient-instagram" },
     { name: "Ban Opponent", gradient: "gradient-instagram" },
