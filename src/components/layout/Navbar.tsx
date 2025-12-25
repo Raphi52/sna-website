@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui";
 import { Menu, X } from "lucide-react";
 
@@ -15,6 +16,29 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Only handle anchor links
+    if (!href.startsWith("#")) return;
+
+    e.preventDefault();
+
+    // If not on home page, navigate to home with anchor
+    if (pathname !== "/") {
+      window.location.href = "/" + href;
+      return;
+    }
+
+    // Scroll to element
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Close mobile menu
+    setIsOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -31,13 +55,14 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
-                className="text-muted hover:text-white transition-colors"
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-muted hover:text-white transition-colors cursor-pointer"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -70,14 +95,14 @@ export function Navbar() {
         <div className="md:hidden bg-surface border-b border-border">
           <div className="px-4 py-4 space-y-4">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.href}
                 href={link.href}
-                className="block text-muted hover:text-white transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="block text-muted hover:text-white transition-colors cursor-pointer"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
             <div className="pt-4 border-t border-border space-y-2">
               <Link href="/auth/login" className="block">
