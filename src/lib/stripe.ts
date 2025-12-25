@@ -1,6 +1,8 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 export interface CreateCheckoutParams {
   userId: string;
@@ -13,6 +15,10 @@ export interface CreateCheckoutParams {
 }
 
 export async function createCheckoutSession(params: CreateCheckoutParams) {
+  if (!stripe) {
+    throw new Error("Stripe is not configured");
+  }
+
   const {
     userId,
     userEmail,

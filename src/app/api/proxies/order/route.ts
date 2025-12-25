@@ -3,7 +3,9 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 // POST /api/proxies/order - Create a new proxy order
 export async function POST(request: NextRequest) {
@@ -39,6 +41,12 @@ export async function POST(request: NextRequest) {
     const userEmail = session.user.email;
 
     if (paymentMethod === "stripe") {
+      if (!stripe) {
+        return NextResponse.json(
+          { error: "Stripe is not configured" },
+          { status: 500 }
+        );
+      }
       // Create Stripe checkout session
       const checkoutSession = await stripe.checkout.sessions.create({
         customer_email: userEmail,
