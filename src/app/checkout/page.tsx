@@ -16,6 +16,7 @@ import {
   Globe,
   Smartphone,
   Zap,
+  Copy,
 } from "lucide-react";
 
 // Products configuration
@@ -190,8 +191,14 @@ function CheckoutContent() {
   const { data: session, status } = useSession();
 
   const [selectedPayment, setSelectedPayment] = useState("card");
+  const [selectedCrypto, setSelectedCrypto] = useState<"btc" | "eth" | "usdttrc20" | null>(null);
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [cryptoPayment, setCryptoPayment] = useState<{
+    payAddress: string;
+    payAmount: number;
+    payCurrency: string;
+  } | null>(null);
   const [cardDetails, setCardDetails] = useState({
     number: "",
     expiry: "",
@@ -211,15 +218,43 @@ function CheckoutContent() {
     }
   }, [status, router, productId]);
 
-  // Handle demo payment
+  // Handle payment
   const handlePayment = async () => {
     setProcessing(true);
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      if (selectedPayment === "crypto" && selectedCrypto) {
+        // Create crypto payment via API
+        const response = await fetch("/api/payments/crypto/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId,
+            currency: selectedCrypto,
+          }),
+        });
 
-    setProcessing(false);
-    setSuccess(true);
+        if (!response.ok) {
+          throw new Error("Failed to create payment");
+        }
+
+        const data = await response.json();
+        setCryptoPayment({
+          payAddress: data.payAddress,
+          payAmount: data.payAmount,
+          payCurrency: data.payCurrency,
+        });
+      } else {
+        // Demo mode for card/paypal
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setSuccess(true);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Payment failed. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   // Format card number with spaces
@@ -449,7 +484,7 @@ function CheckoutContent() {
             )}
 
             {/* Crypto */}
-            {selectedPayment === "crypto" && (
+            {selectedPayment === "crypto" && !cryptoPayment && (
               <Card className="p-6">
                 <h2 className="text-lg font-semibold text-white mb-4">
                   Select Cryptocurrency
@@ -458,11 +493,16 @@ function CheckoutContent() {
                   {[
                     { id: "btc", name: "Bitcoin", symbol: "BTC", color: "#F7931A" },
                     { id: "eth", name: "Ethereum", symbol: "ETH", color: "#627EEA" },
-                    { id: "usdt", name: "Tether", symbol: "USDT", color: "#26A17B" },
+                    { id: "usdttrc20", name: "USDT (TRC20)", symbol: "USDT", color: "#26A17B" },
                   ].map((crypto) => (
                     <button
                       key={crypto.id}
-                      className="p-4 rounded-lg border border-border hover:border-info transition-colors text-center"
+                      onClick={() => setSelectedCrypto(crypto.id as "btc" | "eth" | "usdttrc20")}
+                      className={`p-4 rounded-lg border transition-colors text-center ${
+                        selectedCrypto === crypto.id
+                          ? "border-info bg-info/10"
+                          : "border-border hover:border-info"
+                      }`}
                     >
                       <div
                         className="w-10 h-10 mx-auto mb-2 rounded-full flex items-center justify-center"
@@ -488,26 +528,69 @@ function CheckoutContent() {
               </Card>
             )}
 
+            {/* Crypto Payment Address */}
+            {selectedPayment === "crypto" && cryptoPayment && (
+              <Card className="p-6">
+                <h2 className="text-lg font-semibold text-white mb-4">
+                  Send Payment
+                </h2>
+                <div className="bg-black/50 p-4 rounded-lg border border-border mb-4">
+                  <p className="text-sm text-muted mb-2">Send exactly:</p>
+                  <p className="text-2xl font-bold text-white mb-4">
+                    {cryptoPayment.payAmount} {cryptoPayment.payCurrency.toUpperCase()}
+                  </p>
+                  <p className="text-sm text-muted mb-2">To this address:</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-xs text-info bg-surface p-2 rounded break-all">
+                      {cryptoPayment.payAddress}
+                    </code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(cryptoPayment.payAddress);
+                      }}
+                      className="p-2 bg-surface hover:bg-surface-hover rounded transition-colors"
+                    >
+                      <Copy className="w-4 h-4 text-muted" />
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-warning/10 border border-warning/30 rounded-lg p-4">
+                  <p className="text-sm text-warning">
+                    Send the exact amount to the address above. Your order will be activated automatically once the payment is confirmed (usually 10-30 minutes).
+                  </p>
+                </div>
+                <div className="mt-4 text-center">
+                  <Link href="/dashboard">
+                    <Button variant="outline">
+                      Check Order Status in Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            )}
+
             {/* Pay Button */}
-            <Button
-              variant="pro"
-              size="lg"
-              className="w-full"
-              onClick={handlePayment}
-              disabled={processing}
-            >
-              {processing ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Lock className="w-5 h-5 mr-2" />
-                  Pay {product.price}€
-                </>
-              )}
-            </Button>
+            {!cryptoPayment && (
+              <Button
+                variant="pro"
+                size="lg"
+                className="w-full"
+                onClick={handlePayment}
+                disabled={processing || (selectedPayment === "crypto" && !selectedCrypto)}
+              >
+                {processing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-5 h-5 mr-2" />
+                    Pay {product.price}€
+                  </>
+                )}
+              </Button>
+            )}
 
             {/* Security badges */}
             <div className="flex items-center justify-center gap-6 text-muted">

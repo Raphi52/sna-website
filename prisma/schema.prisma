@@ -181,6 +181,10 @@ enum ProductType {
   PRO_MONTHLY
   PRO_ANNUAL
   PRO_LIFETIME
+  PROXY_STARTER
+  PROXY_GROWTH
+  PROXY_SCALE
+  PROXY_ENTERPRISE
 }
 
 // ============= DOWNLOADS =============
