@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Compress-Archive -Path ''../package.json'' -DestinationPath ''SocialNetworkArmy-v1.1.1.zip'' -Force\")",
+      "Bash(dir \"C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\socialnetworkarmy-website\\\\releases\")"
+    ]
+  }
+}
