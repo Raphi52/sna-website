@@ -33,7 +33,7 @@ const products = {
       "Unlimited accounts",
       "Advanced automation",
       "24/7 scheduler",
-      "1 proxy included/month",
+      "1 proxy included",
       "Priority support",
     ],
   },
@@ -50,7 +50,7 @@ const products = {
       "Unlimited accounts",
       "Advanced automation",
       "24/7 scheduler",
-      "1 proxy included/month",
+      "1 proxy included",
       "Priority support",
     ],
   },
@@ -63,7 +63,7 @@ const products = {
     period: "once",
     features: [
       "Everything in Pro",
-      "10 proxies included/month",
+      "10 proxies included",
       "Lifetime updates",
       "1-on-1 onboarding",
       "Priority feature requests",
@@ -181,7 +181,7 @@ const paymentMethods = [
         </svg>
       </div>
     ),
-    description: "Bitcoin, Ethereum, USDT",
+    description: "Bitcoin, Ethereum",
   },
 ];
 

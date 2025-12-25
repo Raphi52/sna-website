@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "Are proxies included in the plans?",
     answer:
-      "Yes! Pro includes 1 premium proxy per month, and Lifetime includes 10 proxies per month. These are high-quality residential and mobile proxies optimized for social media. You can also use your own proxies or purchase additional proxy packages from our store.",
+      "Yes! Pro includes 1 premium proxy, and Lifetime includes 10 proxies. These are high-quality residential and mobile proxies optimized for social media. You can also use your own proxies or purchase additional proxy packages from our store.",
   },
   {
     question: "How does the scheduler work?",
@@ -29,12 +29,12 @@ const faqs = [
   {
     question: "What's the difference between Free, Pro, and Lifetime?",
     answer:
-      "Free: 1 account per platform, basic automation. Pro (29€/month): Unlimited accounts, advanced fingerprinting, scheduler, 1 proxy/month, priority support. Lifetime (299€ once): Everything in Pro forever, 10 proxies/month, 1-on-1 onboarding, priority feature requests.",
+      "Free: 1 account per platform, basic automation. Pro (29€/month): Unlimited accounts, scheduler, 1 proxy, priority support. Lifetime (299€ once): Everything in Pro forever, 10 proxies, 1-on-1 onboarding, priority feature requests.",
   },
   {
     question: "What payment methods do you accept?",
     answer:
-      "We accept credit cards (Visa, Mastercard, Amex) via Stripe, PayPal, and cryptocurrencies (Bitcoin, Ethereum, USDT). All payments are secure and encrypted. Crypto payments are processed via NOWPayments.",
+      "We accept credit cards (Visa, Mastercard, Amex) via Stripe, PayPal, and cryptocurrencies (Bitcoin, Ethereum). All payments are secure and encrypted. Crypto payments are processed via NOWPayments.",
   },
   {
     question: "Can I get a refund?",

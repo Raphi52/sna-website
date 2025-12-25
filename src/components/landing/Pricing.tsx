@@ -32,8 +32,7 @@ const plans = [
       { text: "Unlimited accounts", included: true },
       { text: "Advanced automation", included: true },
       { text: "24/7 scheduler", included: true },
-      { text: "Advanced fingerprinting", included: true },
-      { text: "1 proxy included/month", included: true, highlight: true },
+      { text: "1 proxy included", included: true, highlight: true },
       { text: "Priority support", included: true },
       { text: "All future updates", included: true },
     ],
@@ -48,7 +47,7 @@ const plans = [
     description: "One-time payment, forever",
     features: [
       { text: "Everything in Pro", included: true },
-      { text: "10 proxies included/month", included: true, highlight: true },
+      { text: "10 proxies included", included: true, highlight: true },
       { text: "Lifetime updates", included: true },
       { text: "1-on-1 onboarding", included: true },
       { text: "Priority feature requests", included: true },
@@ -256,13 +255,6 @@ export function Pricing() {
                 <path d="M9 17.5L16 28l7-10.5L16 22l-7-4.5z" fill="white"/>
               </svg>
               <span className="text-muted">ETH</span>
-            </span>
-            <span className="w-24 h-10 bg-surface rounded border border-border text-xs flex items-center justify-center gap-1">
-              <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
-                <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-                <path d="M17.5 17.2v3.3h-3v-3.3c-2.7-.3-4.5-1.5-4.5-1.5l1-2.5s2 1.3 4.5 1.3c1.5 0 2.5-.5 2.5-1.5 0-1-.8-1.5-3-2-3-.7-5-2-5-4.5 0-2.3 1.8-4 4.5-4.3V5h3v2.2c2.2.3 3.5 1.2 3.5 1.2l-.8 2.5s-1.5-1-3.5-1c-1.5 0-2.2.5-2.2 1.3 0 .8.8 1.3 3 1.8 3.2.8 5 2.2 5 4.7 0 2.3-1.8 4-4.5 4.5z" fill="white"/>
-              </svg>
-              <span className="text-muted">USDT</span>
             </span>
           </div>
         </motion.div>

@@ -11,7 +11,10 @@
       "Bash(npm run dev:*)",
       "Bash(timeout:*)",
       "WebFetch(domain:localhost)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dir:*)",
+      "Bash(powershell -Command \"\\(Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg''\\).Count; \\(Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.mp4''\\).Count; \\(Get-ChildItem ''D:\\\\source\\\\MiaCostaPrivate\\\\*.mp4''\\).Count\")",
+      "Bash(powershell -Command \"Get-ChildItem ''D:\\\\source\\\\brendatrindadee_\\\\*.jpg'' | Select-Object -First 20 | Copy-Item -Destination ''C:\\\\Users\\\\User\\\\Desktop\\\\SocialNetworkArmy\\\\exclusivehub\\\\public\\\\media\\\\preview\\\\''\")"
     ]
   }
 }
