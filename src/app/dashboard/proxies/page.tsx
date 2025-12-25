@@ -367,7 +367,7 @@ export default function ProxiesPage() {
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-white">{pkg.name}</h4>
                       {pkg.popular && (
-                        <Badge variant="info" size="sm">
+                        <Badge variant="info">
                           Popular
                         </Badge>
                       )}
