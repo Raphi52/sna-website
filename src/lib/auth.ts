@@ -63,17 +63,39 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      // Allow OAuth sign in
+      if (account?.provider === "google") {
+        return true;
+      }
+      // Allow credentials sign in
+      if (account?.provider === "credentials") {
+        return true;
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      // Initial sign in
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
+        token.role = (user as any).role || "USER";
+      }
+      // For OAuth, fetch user from DB to get role
+      if (account?.provider === "google" && user) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
-        (session.user as any).role = token.role;
+        (session.user as any).role = token.role || "USER";
       }
       return session;
     },
