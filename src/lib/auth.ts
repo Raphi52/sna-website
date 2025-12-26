@@ -64,13 +64,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth sign in
-      if (account?.provider === "google") {
-        return true;
-      }
-      // Allow credentials sign in
-      if (account?.provider === "credentials") {
-        return true;
+      // For Google OAuth, check if user exists with password (credentials account)
+      if (account?.provider === "google" && user.email) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          include: { accounts: true },
+        });
+
+        // If user exists but was created with credentials (has password, no Google account linked)
+        if (existingUser && existingUser.passwordHash && !existingUser.accounts.some(a => a.provider === "google")) {
+          // Redirect to error page with specific message
+          return "/auth/error?error=OAuthAccountNotLinked";
+        }
       }
       return true;
     },
