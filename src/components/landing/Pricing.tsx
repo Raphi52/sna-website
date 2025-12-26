@@ -273,21 +273,42 @@ export function Pricing() {
         >
           <p className="text-sm text-muted mb-6">Accepted payment methods</p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            {[
-              { name: "Visa", bg: "#1A1F71" },
-              { name: "MC", bg: "#EB001B" },
-              { name: "PayPal", bg: "#003087" },
-              { name: "BTC", bg: "#F7931A" },
-              { name: "ETH", bg: "#627EEA" },
-            ].map((method) => (
-              <motion.div
-                key={method.name}
-                whileHover={{ y: -4 }}
-                className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center"
-              >
-                <span className="text-xs font-bold text-white/70">{method.name}</span>
-              </motion.div>
-            ))}
+            {/* Visa */}
+            <motion.div whileHover={{ y: -4 }} className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center">
+              <svg className="w-10 h-6" viewBox="0 0 50 32" fill="none">
+                <rect width="50" height="32" rx="4" fill="#1A1F71"/>
+                <text x="25" y="20" textAnchor="middle" fill="white" fontSize="11" fontWeight="bold" fontStyle="italic" fontFamily="Arial">VISA</text>
+              </svg>
+            </motion.div>
+            {/* Mastercard */}
+            <motion.div whileHover={{ y: -4 }} className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center">
+              <svg className="w-8 h-5" viewBox="0 0 50 30" fill="none">
+                <circle cx="18" cy="15" r="12" fill="#EB001B"/>
+                <circle cx="32" cy="15" r="12" fill="#F79E1B"/>
+                <path d="M25 6C27.5 8 29 11.5 29 15C29 18.5 27.5 22 25 24C22.5 22 21 18.5 21 15C21 11.5 22.5 8 25 6Z" fill="#FF5F00"/>
+              </svg>
+            </motion.div>
+            {/* PayPal */}
+            <motion.div whileHover={{ y: -4 }} className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#00457C">
+                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.633h6.116c2.058 0 3.485.436 4.238 1.298.341.39.56.831.67 1.35.115.547.116 1.203.003 2.014l-.008.051v.473l.368.21c.31.164.558.353.748.567.318.36.524.824.612 1.378.091.57.063 1.248-.085 2.014-.172.89-.451 1.662-.833 2.298a4.728 4.728 0 0 1-1.313 1.458 5.103 5.103 0 0 1-1.7.819 8.036 8.036 0 0 1-2.017.239H11.57a.94.94 0 0 0-.93.795l-.041.225-.643 4.073-.031.161a.94.94 0 0 1-.928.795H7.076z"/>
+              </svg>
+            </motion.div>
+            {/* Bitcoin */}
+            <motion.div whileHover={{ y: -4 }} className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center">
+              <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+                <path d="M22.5 13.5c.3-2-1.2-3.1-3.3-3.8l.7-2.7-1.7-.4-.7 2.6c-.4-.1-.9-.2-1.4-.3l.7-2.7-1.7-.4-.7 2.7c-.4-.1-.7-.2-1-.2l-2.3-.6-.4 1.8s1.2.3 1.2.3c.7.2.8.6.8 1l-.8 3.2c0 0 .1 0 .2.1-.1 0-.1 0-.2 0l-1.2 4.7c-.1.2-.3.5-.8.4 0 0-1.2-.3-1.2-.3l-.8 1.9 2.2.6c.4.1.8.2 1.2.3l-.7 2.8 1.7.4.7-2.7c.5.1.9.2 1.4.3l-.7 2.7 1.7.4.7-2.7c3 .6 5.2.3 6.1-2.3.8-2.1 0-3.3-1.6-4.1 1.1-.3 2-1 2.2-2.5zm-4 5.5c-.6 2.3-4.4 1-5.6.7l1-4c1.3.3 5.2 1 4.6 3.3zm.6-5.6c-.5 2.1-3.7.9-4.7.7l.9-3.6c1 .2 4.4.7 3.8 2.9z" fill="white"/>
+              </svg>
+            </motion.div>
+            {/* Ethereum */}
+            <motion.div whileHover={{ y: -4 }} className="w-16 h-10 glass-card rounded-lg border border-border/30 flex items-center justify-center">
+              <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="16" fill="#627EEA"/>
+                <path d="M16 4L9 16.5 16 21l7-4.5L16 4z" fill="white" fillOpacity="0.6"/>
+                <path d="M9 17.5L16 28l7-10.5L16 22l-7-4.5z" fill="white"/>
+              </svg>
+            </motion.div>
           </div>
         </motion.div>
       </div>
