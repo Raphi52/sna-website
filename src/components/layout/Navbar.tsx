@@ -68,7 +68,9 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-pro rounded-lg" />
+            <div className="w-8 h-8 gradient-pro rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">S</span>
+            </div>
             <span className="text-xl font-bold text-white">
               SocialNetwork<span className="text-info">Army</span>
             </span>

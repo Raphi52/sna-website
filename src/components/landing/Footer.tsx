@@ -134,7 +134,9 @@ export function Footer() {
             {/* Brand */}
             <div className="col-span-2">
               <Link href="/" className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 gradient-pro rounded-xl shadow-lg shadow-info/20" />
+                <div className="w-10 h-10 gradient-pro rounded-xl shadow-lg shadow-info/20 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">S</span>
+                </div>
                 <span className="text-xl font-bold text-white">
                   SocialNetwork<span className="text-info">Army</span>
                 </span>
