@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyWebhookSignature, IPNPayload } from "@/lib/nowpayments";
 import { generateLicenseKey, calculateExpirationDate, getLicenseType } from "@/lib/license";
+import { sendToAccounting, mapCryptoCurrency, mapPaymentStatus, mapProductType } from "@/lib/crypto-accounting";
 
 export async function POST(request: NextRequest) {
   try {
@@ -76,6 +77,28 @@ export async function POST(request: NextRequest) {
       default:
         console.log("Unknown payment status:", payload.payment_status);
     }
+
+    // Send to accounting system
+    await sendToAccounting({
+      externalId: payment.id,
+      amountUsd: Number(payload.price_amount),
+      amountCrypto: payload.pay_amount,
+      cryptoCurrency: mapCryptoCurrency(payload.pay_currency),
+      productType: mapProductType(payment.productType),
+      productName: payment.productName,
+      status: mapPaymentStatus(payload.payment_status),
+      paymentDate: new Date().toISOString(),
+      userEmail: payment.user.email,
+      userId: payment.userId,
+      walletAddress: payload.pay_address,
+      exchangeRate: payload.pay_amount > 0 ? payload.price_amount / payload.pay_amount : 0,
+      nowPaymentsId: String(payload.payment_id),
+      actuallyPaid: payload.actually_paid,
+      metadata: {
+        productType: payment.productType,
+        purchaseId: payload.purchase_id,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -86,7 +86,7 @@ export default async function DownloadPage() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
               Download{" "}
-              <span className="bg-clip-text text-transparent gradient-pro">
+              <span className="bg-clip-text text-transparent gradient-pro-text">
                 SocialNetworkArmy
               </span>
             </h1>

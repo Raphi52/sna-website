@@ -78,31 +78,35 @@ function FAQItem({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
       className={cn(
-        "group border border-border rounded-xl overflow-hidden transition-all duration-300",
-        isOpen ? "bg-surface border-info/30" : "bg-surface/50 hover:bg-surface hover:border-border-hover"
+        "group glass-card rounded-2xl overflow-hidden transition-all duration-500 border",
+        isOpen ? "border-accent/30" : "border-border/30 hover:border-white/10"
       )}
     >
       <button
         onClick={onClick}
-        className="w-full p-5 flex items-center justify-between text-left"
+        className="w-full p-6 flex items-center justify-between text-left"
       >
         <span className={cn(
-          "font-medium transition-colors",
+          "font-medium text-lg transition-colors",
           isOpen ? "text-white" : "text-white/80 group-hover:text-white"
         )}>
           {question}
         </span>
-        <div className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-4",
-          isOpen ? "bg-info rotate-180" : "bg-surface-hover group-hover:bg-info/20"
-        )}>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className={cn(
+            "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-4",
+            isOpen ? "bg-gradient-to-br from-info to-accent" : "bg-surface-hover group-hover:bg-accent/20"
+          )}
+        >
           <ChevronDown className={cn(
-            "w-4 h-4 transition-colors",
-            isOpen ? "text-white" : "text-muted group-hover:text-info"
+            "w-5 h-5 transition-colors",
+            isOpen ? "text-white" : "text-muted group-hover:text-accent"
           )} />
-        </div>
+        </motion.div>
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -110,10 +114,10 @@ function FAQItem({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="px-5 pb-5">
-              <div className="h-px bg-border mb-4" />
+            <div className="px-6 pb-6">
+              <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-4" />
               <p className="text-muted leading-relaxed">{answer}</p>
             </div>
           </motion.div>
@@ -127,9 +131,10 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-24 relative">
+    <section id="faq" className="py-32 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
+      <div className="absolute inset-0 hero-gradient opacity-30" />
+      <div className="section-divider absolute top-0 left-0 right-0" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section header */}
@@ -138,9 +143,9 @@ export function FAQ() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-surface/80 backdrop-blur border border-border rounded-full px-4 py-2 mb-6"
+            className="inline-flex items-center gap-2 glass-card rounded-full px-5 py-2.5 mb-8"
           >
-            <HelpCircle className="w-4 h-4 text-info" />
+            <HelpCircle className="w-4 h-4 text-accent" />
             <span className="text-sm font-medium text-white">
               Got Questions?
             </span>
@@ -150,19 +155,17 @@ export function FAQ() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl sm:text-5xl font-bold text-white mb-6"
+            transition={{ duration: 0.6 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6"
           >
             Frequently Asked{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-info to-purple-500">
-              Questions
-            </span>
+            <span className="gradient-text-animated">Questions</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="text-xl text-muted"
           >
             Everything you need to know about SocialNetworkArmy
@@ -188,19 +191,22 @@ export function FAQ() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface/80 backdrop-blur border border-border rounded-2xl">
-            <div className="w-12 h-12 rounded-full bg-info/20 flex items-center justify-center">
-              <MessageCircle className="w-6 h-6 text-info" />
-            </div>
+          <div className="inline-flex flex-col sm:flex-row items-center gap-6 p-8 glass-card rounded-3xl border border-border/30">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-info to-accent flex items-center justify-center shadow-2xl"
+            >
+              <MessageCircle className="w-8 h-8 text-white" />
+            </motion.div>
             <div className="text-center sm:text-left">
-              <p className="font-medium text-white mb-1">Still have questions?</p>
-              <p className="text-sm text-muted">Our team is here to help you get started</p>
+              <p className="font-semibold text-white text-lg mb-1">Still have questions?</p>
+              <p className="text-muted">Our team is here to help you get started</p>
             </div>
             <Link href="mailto:support@socialnetworkarmy.com">
-              <Button variant="outline" className="whitespace-nowrap">
+              <Button variant="outline" size="lg" className="whitespace-nowrap">
                 Contact Support
               </Button>
             </Link>
