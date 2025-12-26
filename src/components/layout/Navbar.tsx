@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui";
 import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 
 const navLinks = [
-  { href: "#features", label: "Features" },
-  { href: "#proxies", label: "Proxies" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "/#features", label: "Features" },
+  { href: "/#proxies", label: "Proxies" },
+  { href: "/#pricing", label: "Pricing" },
   { href: "/download", label: "Download" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 export function Navbar() {
@@ -20,6 +20,7 @@ export function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
 
   // Close user menu when clicking outside
@@ -33,33 +34,45 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Only handle anchor links
-    if (!href.startsWith("#")) return;
-
-    e.preventDefault();
-
-    // If not on home page, navigate to home with anchor
-    if (pathname !== "/") {
-      window.location.href = "/" + href;
-      return;
-    }
-
-    // Scroll to element
-    const element = document.querySelector(href);
+  // Scroll to anchor after navigation
+  const scrollToAnchor = (hash: string) => {
+    const element = document.querySelector(hash);
     if (element) {
-      const navbarHeight = 64; // Height of fixed navbar
+      const navbarHeight = 64;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - navbarHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
+  };
 
-    // Close mobile menu
+  // Handle hash scroll on page load/navigation
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && pathname === "/") {
+      // Small delay to ensure page is rendered
+      const timer = setTimeout(() => scrollToAnchor(hash), 150);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // For regular pages, let Link handle it
+    if (!href.includes("#")) return;
+
+    e.preventDefault();
     setIsOpen(false);
+
+    const hash = href.includes("#") ? "#" + href.split("#")[1] : "";
+    const targetPath = href.split("#")[0] || "/";
+
+    // If already on homepage, just scroll
+    if (pathname === "/" || pathname === targetPath) {
+      scrollToAnchor(hash);
+      window.history.pushState(null, "", href);
+    } else {
+      // Navigate to homepage - the useEffect will handle scrolling
+      router.push(href);
+    }
   };
 
   return (
