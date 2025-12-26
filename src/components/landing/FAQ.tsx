@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, HelpCircle, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui";
 
 const faqs = [
   {
@@ -29,7 +31,7 @@ const faqs = [
   {
     question: "What's the difference between Free, Pro, and Lifetime?",
     answer:
-      "Free: 1 account per platform, basic automation. Pro (29€/month): Unlimited accounts, scheduler, 1 proxy, priority support. Lifetime (299€ once): Everything in Pro forever, 10 proxies, 1-on-1 onboarding, priority feature requests.",
+      "Free: 1 account per platform, basic automation. Pro ($29/month): Unlimited accounts, scheduler, 1 proxy, priority support. Lifetime ($299 once): Everything in Pro forever, 10 proxies, 1-on-1 onboarding, priority feature requests.",
   },
   {
     question: "What payment methods do you accept?",
@@ -63,35 +65,61 @@ function FAQItem({
   answer,
   isOpen,
   onClick,
+  index,
 }: {
   question: string;
   answer: string;
   isOpen: boolean;
   onClick: () => void;
+  index: number;
 }) {
   return (
-    <div className="border-b border-border">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className={cn(
+        "group border border-border rounded-xl overflow-hidden transition-all duration-300",
+        isOpen ? "bg-surface border-info/30" : "bg-surface/50 hover:bg-surface hover:border-border-hover"
+      )}
+    >
       <button
         onClick={onClick}
-        className="w-full py-4 flex items-center justify-between text-left"
+        className="w-full p-5 flex items-center justify-between text-left"
       >
-        <span className="font-medium text-white">{question}</span>
-        <ChevronDown
-          className={cn(
-            "w-5 h-5 text-muted transition-transform",
-            isOpen && "rotate-180"
-          )}
-        />
+        <span className={cn(
+          "font-medium transition-colors",
+          isOpen ? "text-white" : "text-white/80 group-hover:text-white"
+        )}>
+          {question}
+        </span>
+        <div className={cn(
+          "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-4",
+          isOpen ? "bg-info rotate-180" : "bg-surface-hover group-hover:bg-info/20"
+        )}>
+          <ChevronDown className={cn(
+            "w-4 h-4 transition-colors",
+            isOpen ? "text-white" : "text-muted group-hover:text-info"
+          )} />
+        </div>
       </button>
-      <motion.div
-        initial={false}
-        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-        className="overflow-hidden"
-      >
-        <p className="pb-4 text-muted">{answer}</p>
-      </motion.div>
-    </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="px-5 pb-5">
+              <div className="h-px bg-border mb-4" />
+              <p className="text-muted leading-relaxed">{answer}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -99,38 +127,50 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-20 bg-surface/30">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-24 relative">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 bg-surface/80 backdrop-blur border border-border rounded-full px-4 py-2 mb-6"
+          >
+            <HelpCircle className="w-4 h-4 text-info" />
+            <span className="text-sm font-medium text-white">
+              Got Questions?
+            </span>
+          </motion.div>
+
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-4xl font-bold text-white mb-4"
+            className="text-4xl sm:text-5xl font-bold text-white mb-6"
           >
-            Frequently Asked Questions
+            Frequently Asked{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-info to-purple-500">
+              Questions
+            </span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-lg text-muted"
+            className="text-xl text-muted"
           >
-            Got questions? We&apos;ve got answers.
+            Everything you need to know about SocialNetworkArmy
           </motion.p>
         </div>
 
         {/* FAQ list */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-surface rounded-xl border border-border p-6"
-        >
+        <div className="space-y-4">
           {faqs.map((faq, index) => (
             <FAQItem
               key={index}
@@ -138,8 +178,33 @@ export function FAQ() {
               answer={faq.answer}
               isOpen={openIndex === index}
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              index={index}
             />
           ))}
+        </div>
+
+        {/* Still have questions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 bg-surface/80 backdrop-blur border border-border rounded-2xl">
+            <div className="w-12 h-12 rounded-full bg-info/20 flex items-center justify-center">
+              <MessageCircle className="w-6 h-6 text-info" />
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="font-medium text-white mb-1">Still have questions?</p>
+              <p className="text-sm text-muted">Our team is here to help you get started</p>
+            </div>
+            <Link href="mailto:support@socialnetworkarmy.com">
+              <Button variant="outline" className="whitespace-nowrap">
+                Contact Support
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>
