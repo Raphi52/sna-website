@@ -1,13 +1,11 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Calendar,
   Smartphone,
   Image,
   BarChart3,
-  Repeat,
   Target,
   Layers,
   Cpu,
@@ -25,92 +23,6 @@ import {
   Maximize2,
   Rocket,
 } from "lucide-react";
-
-// ─── Mini cursor for feature visuals ────────────────────────────
-function FeatureCursor({
-  keyframes,
-  isVisible
-}: {
-  keyframes: { x: number; y: number; click?: boolean; delay: number }[];
-  isVisible: boolean;
-}) {
-  const [currentKf, setCurrentKf] = useState(0);
-  const [clicking, setClicking] = useState(false);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    let totalDelay = 0;
-
-    const scheduleLoop = () => {
-      keyframes.forEach((kf, i) => {
-        totalDelay = kf.delay;
-        timers.push(
-          setTimeout(() => {
-            setCurrentKf(i);
-            if (kf.click) {
-              setClicking(true);
-              setTimeout(() => setClicking(false), 200);
-            }
-          }, totalDelay)
-        );
-      });
-
-      // Loop
-      const loopDuration = keyframes[keyframes.length - 1].delay + 1500;
-      timers.push(
-        setTimeout(() => {
-          setCurrentKf(0);
-          setClicking(false);
-          scheduleLoop();
-        }, loopDuration)
-      );
-    };
-
-    // Start after initial delay
-    timers.push(setTimeout(scheduleLoop, 800));
-
-    return () => timers.forEach(clearTimeout);
-  }, [isVisible, keyframes]);
-
-  if (!isVisible) return null;
-
-  const kf = keyframes[currentKf];
-
-  return (
-    <motion.div
-      className="absolute z-30 pointer-events-none"
-      animate={{ x: kf.x, y: kf.y }}
-      transition={{ type: "spring", damping: 20, stiffness: 120, mass: 0.6 }}
-    >
-      {/* Click ripple */}
-      {clicking && (
-        <motion.div
-          className="absolute top-0 left-0 w-6 h-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/60"
-          initial={{ scale: 0, opacity: 1 }}
-          animate={{ scale: 2, opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        />
-      )}
-      <motion.svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        className="feature-cursor"
-        animate={{ scale: clicking ? 0.8 : 1 }}
-        transition={{ duration: 0.1 }}
-      >
-        <path
-          d="M5 3L19 12L13 14L9 21L5 3Z"
-          fill="white"
-          stroke="rgba(139,92,246,0.7)"
-          strokeWidth="1.5"
-        />
-      </motion.svg>
-    </motion.div>
-  );
-}
 
 const features = [
   {
@@ -197,8 +109,6 @@ const features = [
 
 // Feature visual components
 function SchedulerVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
   const tasks = [
     { name: "REELS", color: "from-orange-500 to-orange-600", left: "8%", width: "12%" },
     { name: "HOME", color: "from-pink-500 to-pink-600", left: "22%", width: "8%" },
@@ -208,17 +118,8 @@ function SchedulerVisual() {
     { name: "DM", color: "from-blue-500 to-blue-600", left: "88%", width: "10%" },
   ];
 
-  const cursorKeyframes = [
-    { x: 30, y: 80, delay: 0 },
-    { x: 80, y: 95, click: true, delay: 1000 },
-    { x: 200, y: 95, delay: 2200 },
-    { x: 300, y: 95, click: true, delay: 3500 },
-    { x: 80, y: 145, delay: 5000 },
-  ];
-
   return (
-    <div ref={ref} className="space-y-4 relative">
-      <FeatureCursor keyframes={cursorKeyframes} isVisible={isInView} />
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 gradient-instagram rounded-xl flex items-center justify-center">
@@ -275,23 +176,10 @@ function SchedulerVisual() {
 }
 
 function BotVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
   const actions = ["Follow", "Scroll Reels", "Publish", "Messages", "Target", "Extract", "Stories", "DM"];
 
-  const cursorKeyframes = [
-    { x: 40, y: 55, delay: 0 },
-    { x: 40, y: 55, click: true, delay: 800 },
-    { x: 140, y: 55, click: true, delay: 2000 },
-    { x: 240, y: 55, click: true, delay: 3200 },
-    { x: 340, y: 55, click: true, delay: 4400 },
-    { x: 40, y: 110, click: true, delay: 5600 },
-    { x: 140, y: 110, click: true, delay: 6800 },
-  ];
-
   return (
-    <div ref={ref} className="space-y-4 relative">
-      <FeatureCursor keyframes={cursorKeyframes} isVisible={isInView} />
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-semibold text-white">Instagram Bot</span>
         <div className="w-8 h-8 gradient-instagram rounded-lg" />
@@ -320,8 +208,6 @@ function BotVisual() {
 }
 
 function ProfilesVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
   const profiles = [
     { name: "lunachic_aa", platform: "Instagram", status: "active" },
     { name: "m_jacosta", platform: "Instagram", status: "active" },
@@ -329,19 +215,8 @@ function ProfilesVisual() {
     { name: "reddit_bot", platform: "Reddit", status: "active" },
   ];
 
-  const cursorKeyframes = [
-    { x: 150, y: 80, delay: 0 },
-    { x: 150, y: 80, click: true, delay: 800 },
-    { x: 150, y: 120, click: true, delay: 2000 },
-    { x: 150, y: 160, click: true, delay: 3200 },
-    { x: 150, y: 200, click: true, delay: 4400 },
-    { x: 30, y: 50, delay: 5600 },
-    { x: 70, y: 50, click: true, delay: 6500 },
-  ];
-
   return (
-    <div ref={ref} className="space-y-4 relative">
-      <FeatureCursor keyframes={cursorKeyframes} isVisible={isInView} />
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-semibold text-white">Profile Manager</span>
         <span className="text-xs text-success">Pro Active</span>
@@ -379,20 +254,8 @@ function ProfilesVisual() {
 }
 
 function MediaVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
-
-  const cursorKeyframes = [
-    { x: 100, y: 80, delay: 0 },
-    { x: 250, y: 60, click: true, delay: 1200 },
-    { x: 250, y: 120, delay: 2500 },
-    { x: 250, y: 180, click: true, delay: 3800 },
-    { x: 100, y: 200, delay: 5000 },
-  ];
-
   return (
-    <div ref={ref} className="space-y-4 relative">
-      <FeatureCursor keyframes={cursorKeyframes} isVisible={isInView} />
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-semibold text-white">Media Processor</span>
         <span className="text-xs text-success">Unique Signature</span>
@@ -435,8 +298,6 @@ function MediaVisual() {
 }
 
 function MetricsVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
   const stats = [
     { label: "Actions", value: "247", color: "bg-blue-500" },
     { label: "Session", value: "4h 32m", color: "bg-cyan-500" },
@@ -444,18 +305,8 @@ function MetricsVisual() {
     { label: "Posts", value: "12", color: "bg-purple-500" },
   ];
 
-  const cursorKeyframes = [
-    { x: 40, y: 30, delay: 0 },
-    { x: 40, y: 30, click: true, delay: 800 },
-    { x: 140, y: 30, click: true, delay: 1800 },
-    { x: 240, y: 30, click: true, delay: 2800 },
-    { x: 100, y: 130, delay: 4000 },
-    { x: 250, y: 110, click: true, delay: 5200 },
-  ];
-
   return (
-    <div ref={ref} className="space-y-4 relative">
-      <FeatureCursor keyframes={cursorKeyframes} isVisible={isInView} />
+    <div className="space-y-4">
       <div className="grid grid-cols-4 gap-2">
         {stats.map((stat, i) => (
           <motion.div
