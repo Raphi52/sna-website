@@ -1,4 +1,5 @@
 export { Hero } from "./Hero";
+export { InteractiveDemo } from "./InteractiveDemo";
 export { Platforms } from "./Platforms";
 export { Features } from "./Features";
 export { Proxies } from "./Proxies";
